@@ -1,4 +1,4 @@
-# figma-file-proxy-server
+# Figma API (figma file proxy server & client)
 Faster Figma proxy api with caching
 
 
@@ -50,3 +50,7 @@ Extended response
     }
 }
 ```
+
+## Other projects
+- [fimga-archives](https://github.com/gridaco/figma-archives) Public figma community file archiver
+- [figma-view](https://github.com/gridaco/figma-view) Embeddable React component renderes Figma node natively
