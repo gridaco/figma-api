@@ -1,0 +1,9 @@
+{
+  "packageName": "figma-api",
+  "packageAuthors": "support@figma.com,universe@grida.co",
+  "license": "MIT",
+  "repository": "https://github.com/gridaco/figma-api-rust",
+  "documentation": "https://www.figma.com/developers/api",
+  "keywords": ["figma", "api", "client"],
+  "categories": ["api-bindings", "web-programming"]
+}
