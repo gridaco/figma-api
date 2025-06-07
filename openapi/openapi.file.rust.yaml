@@ -898,21 +898,6 @@ components:
     HasLayoutTrait:
       type: object
       properties:
-        absoluteBoundingBox:
-          description: Bounding box of the node in absolute space coordinates.
-          oneOf:
-          - $ref: "#/components/schemas/Rectangle"
-          - type: "null"
-        absoluteRenderBounds:
-          description: The actual bounds of a node accounting for drop shadows, 
-            thick strokes, and anything else that may fall outside the node's 
-            regular bounding box defined in `x`, `y`, `width`, and `height`. The
-            `x` and `y` inside this property represent the absolute position of 
-            the node on the page. This value will be `null` if the node is 
-            invisible.
-          oneOf:
-          - $ref: "#/components/schemas/Rectangle"
-          - type: "null"
         preserveRatio:
           type: boolean
           description: Keep height and width constrained to same ratio.
@@ -961,10 +946,8 @@ components:
             auto-layout frames, ignored otherwise. Determines whether a layer 
             should stretch along the parent's primary axis. A `0` corresponds to
             a fixed size and `1` corresponds to stretch.
-          enum:
-          - 0
-          - 1
           default: 0
+
         layoutPositioning:
           type: string
           description: Determines whether a layer's size and position should be 
@@ -1198,16 +1181,6 @@ components:
       - $ref: "#/components/schemas/MinimalStrokesTrait"
       - type: object
         properties:
-          fillOverrideTable:
-            type: object
-            additionalProperties:
-              oneOf:
-              - $ref: "#/components/schemas/PaintOverride"
-              - type: "null"
-            description: Map from ID to PaintOverride for looking up fill 
-              overrides. To see which regions are overriden, you must use the 
-              `geometry=paths` option. Each path returned may have an 
-              `overrideID` which maps to this table.
           fillGeometry:
             type: array
             items:
@@ -2699,32 +2672,19 @@ components:
       - type: object
         description: A drop shadow effect
         properties:
-          type:
-            type: string
-            description: A string literal representing the effect's type. Always
-              check the type before reading other properties.
-            enum:
-            - DROP_SHADOW
           showShadowBehindNode:
             type: boolean
             description: Whether to show the shadow behind translucent or 
               transparent pixels
             default: false
         required:
-        - type
         - showShadowBehindNode
       - $ref: "#/components/schemas/BaseShadowEffect"
     InnerShadowEffect:
       allOf:
       - type: object
         description: An inner shadow effect
-        properties:
-          type:
-            type: string
-            description: A string literal representing the effect's type. Always
-              check the type before reading other properties.
-            enum:
-            - INNER_SHADOW
+        properties: {}
       - $ref: "#/components/schemas/BaseShadowEffect"
     BlurEffect:
       oneOf:
@@ -2904,7 +2864,8 @@ components:
       oneOf:
       - $ref: "#/components/schemas/DropShadowEffect"
       - $ref: "#/components/schemas/InnerShadowEffect"
-      - $ref: "#/components/schemas/BlurEffect"
+      - $ref: "#/components/schemas/LayerBlurEffect"
+      - $ref: "#/components/schemas/BackgroundBlurEffect"
       - $ref: "#/components/schemas/TextureEffect"
       - $ref: "#/components/schemas/NoiseEffect"
       discriminator:
@@ -2912,8 +2873,8 @@ components:
         mapping:
           DROP_SHADOW: "#/components/schemas/DropShadowEffect"
           INNER_SHADOW: "#/components/schemas/InnerShadowEffect"
-          LAYER_BLUR: "#/components/schemas/BlurEffect"
-          BACKGROUND_BLUR: "#/components/schemas/BlurEffect"
+          LAYER_BLUR: "#/components/schemas/LayerBlurEffect"
+          BACKGROUND_BLUR: "#/components/schemas/BackgroundBlurEffect"
           TEXTURE: "#/components/schemas/TextureEffect"
           NOISE: "#/components/schemas/NoiseEffect"
     Style:
@@ -5240,6 +5201,33 @@ components:
       - error
       - status
       - message
+    LayerBlurEffect:
+      type: object
+      properties:
+        visible:
+          type: boolean
+          description: Whether this effect is visible
+        radius:
+          type: number
+          description: The blur radius
+      required:
+      - type
+      - visible
+      - radius
+
+    BackgroundBlurEffect:
+      type: object
+      properties:
+        visible:
+          type: boolean
+          description: Whether this effect is visible
+        radius:
+          type: number
+          description: The blur radius
+      required:
+      - type
+      - visible
+      - radius
   responses:
     GetFileResponse:
       description: Response from the GET /v1/files/{file_key} endpoint.

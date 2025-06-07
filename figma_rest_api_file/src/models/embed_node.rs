@@ -19,9 +19,6 @@ pub struct EmbedNode {
     /// The name given to the node by the user in the tool.
     #[serde(rename = "name")]
     pub name: String,
-    /// The type of this node, represented by the string literal \"EMBED\"
-    #[serde(rename = "type")]
-    pub r#type: Type,
     /// Whether or not the node is visible on the canvas.
     #[serde(rename = "visible", skip_serializing_if = "Option::is_none")]
     pub visible: Option<bool>,
@@ -55,11 +52,10 @@ pub struct EmbedNode {
 }
 
 impl EmbedNode {
-    pub fn new(id: String, name: String, r#type: Type, scroll_behavior: ScrollBehavior) -> EmbedNode {
+    pub fn new(id: String, name: String, scroll_behavior: ScrollBehavior) -> EmbedNode {
         EmbedNode {
             id,
             name,
-            r#type,
             visible: None,
             locked: None,
             is_fixed: None,
@@ -72,18 +68,6 @@ impl EmbedNode {
             explicit_variable_modes: None,
             export_settings: None,
         }
-    }
-}
-/// The type of this node, represented by the string literal \"EMBED\"
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Type {
-    #[serde(rename = "EMBED")]
-    Embed,
-}
-
-impl Default for Type {
-    fn default() -> Type {
-        Self::Embed
     }
 }
 /// How layer should be treated when the frame is resized

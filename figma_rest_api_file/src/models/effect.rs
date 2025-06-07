@@ -19,7 +19,9 @@ pub enum Effect {
     #[serde(rename="INNER_SHADOW")]
     InnerShadow(Box<models::InnerShadowEffect>),
     #[serde(rename="LAYER_BLUR")]
-    LayerBlur(Box<models::BlurEffect>),
+    LayerBlur(Box<models::LayerBlurEffect>),
+    #[serde(rename="BACKGROUND_BLUR")]
+    BackgroundBlur(Box<models::BackgroundBlurEffect>),
     #[serde(rename="TEXTURE")]
     Texture(Box<models::TextureEffect>),
     #[serde(rename="NOISE")]
@@ -32,18 +34,6 @@ impl Default for Effect {
     }
 }
 
-/// The string literal 'PROGRESSIVE' representing the blur type. Always check the blurType before reading other properties.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum BlurType {
-    #[serde(rename = "PROGRESSIVE")]
-    Progressive,
-}
-
-impl Default for BlurType {
-    fn default() -> BlurType {
-        Self::Progressive
-    }
-}
 /// The string literal 'DUOTONE' representing the noise type.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum NoiseType {

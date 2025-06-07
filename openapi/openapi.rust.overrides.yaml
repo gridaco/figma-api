@@ -1,0 +1,57 @@
+components:
+  schemas:
+    HasLayoutTrait:
+      properties:
+        layoutGrow:
+          type: number
+          description: This property is applicable only for direct children of 
+            auto-layout frames, ignored otherwise. Determines whether a layer 
+            should stretch along the parent's primary axis. A `0` corresponds to
+            a fixed size and `1` corresponds to stretch.
+          default: 0
+
+    Effect:
+      oneOf:
+      - $ref: "#/components/schemas/DropShadowEffect"
+      - $ref: "#/components/schemas/InnerShadowEffect"
+      - $ref: "#/components/schemas/LayerBlurEffect"
+      - $ref: "#/components/schemas/BackgroundBlurEffect"
+      - $ref: "#/components/schemas/TextureEffect"
+      - $ref: "#/components/schemas/NoiseEffect"
+      discriminator:
+        propertyName: type
+        mapping:
+          DROP_SHADOW: "#/components/schemas/DropShadowEffect"
+          INNER_SHADOW: "#/components/schemas/InnerShadowEffect"
+          LAYER_BLUR: "#/components/schemas/LayerBlurEffect"
+          BACKGROUND_BLUR: "#/components/schemas/BackgroundBlurEffect"
+          TEXTURE: "#/components/schemas/TextureEffect"
+          NOISE: "#/components/schemas/NoiseEffect"
+
+    LayerBlurEffect:
+          type: object
+          properties:
+            visible:
+              type: boolean
+              description: Whether this effect is visible
+            radius:
+              type: number
+              description: The blur radius
+          required:
+            - type
+            - visible
+            - radius
+
+    BackgroundBlurEffect:
+      type: object
+      properties:
+        visible:
+          type: boolean
+          description: Whether this effect is visible
+        radius:
+          type: number
+          description: The blur radius
+      required:
+        - type
+        - visible
+        - radius

@@ -19,8 +19,6 @@ pub struct CanvasNode {
     /// The name given to the node by the user in the tool.
     #[serde(rename = "name")]
     pub name: String,
-    #[serde(rename = "type")]
-    pub r#type: Type,
     /// Whether or not the node is visible on the canvas.
     #[serde(rename = "visible", skip_serializing_if = "Option::is_none")]
     pub visible: Option<bool>,
@@ -73,11 +71,10 @@ pub struct CanvasNode {
 }
 
 impl CanvasNode {
-    pub fn new(id: String, name: String, r#type: Type, scroll_behavior: ScrollBehavior, children: Vec<models::SubcanvasNode>, background_color: models::Rgba, prototype_start_node_id: Option<String>, flow_starting_points: Vec<models::FlowStartingPoint>, prototype_device: models::PrototypeDevice) -> CanvasNode {
+    pub fn new(id: String, name: String, scroll_behavior: ScrollBehavior, children: Vec<models::SubcanvasNode>, background_color: models::Rgba, prototype_start_node_id: Option<String>, flow_starting_points: Vec<models::FlowStartingPoint>, prototype_device: models::PrototypeDevice) -> CanvasNode {
         CanvasNode {
             id,
             name,
-            r#type,
             visible: None,
             locked: None,
             is_fixed: None,
@@ -97,18 +94,6 @@ impl CanvasNode {
             prototype_backgrounds: None,
             measurements: None,
         }
-    }
-}
-/// 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Type {
-    #[serde(rename = "CANVAS")]
-    Canvas,
-}
-
-impl Default for Type {
-    fn default() -> Type {
-        Self::Canvas
     }
 }
 /// How layer should be treated when the frame is resized

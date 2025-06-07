@@ -33,9 +33,6 @@ pub struct InnerShadowEffect {
     pub visible: bool,
     #[serde(rename = "boundVariables", skip_serializing_if = "Option::is_none")]
     pub bound_variables: Option<Box<models::BaseShadowEffectBoundVariables>>,
-    /// A string literal representing the effect's type. Always check the type before reading other properties.
-    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
-    pub r#type: Option<Type>,
 }
 
 impl InnerShadowEffect {
@@ -48,20 +45,7 @@ impl InnerShadowEffect {
             spread: None,
             visible,
             bound_variables: None,
-            r#type: None,
         }
-    }
-}
-/// A string literal representing the effect's type. Always check the type before reading other properties.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Type {
-    #[serde(rename = "INNER_SHADOW")]
-    InnerShadow,
-}
-
-impl Default for Type {
-    fn default() -> Type {
-        Self::InnerShadow
     }
 }
 

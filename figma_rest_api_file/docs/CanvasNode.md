@@ -6,7 +6,6 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** | A string uniquely identifying this node within the document. | 
 **name** | **String** | The name given to the node by the user in the tool. | 
-**r#type** | **String** |  | 
 **visible** | Option<**bool**> | Whether or not the node is visible on the canvas. | [optional][default to true]
 **locked** | Option<**bool**> | If true, layer is locked and cannot be edited | [optional][default to false]
 **is_fixed** | Option<**bool**> | Whether the layer is fixed while the parent is scrolling | [optional][default to false]

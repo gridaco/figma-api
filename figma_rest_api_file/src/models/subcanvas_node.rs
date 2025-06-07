@@ -128,20 +128,6 @@ impl Default for LayoutAlign {
         Self::Inherit
     }
 }
-/// This property is applicable only for direct children of auto-layout frames, ignored otherwise. Determines whether a layer should stretch along the parent's primary axis. A `0` corresponds to a fixed size and `1` corresponds to stretch.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum LayoutGrow {
-    #[serde(rename = "0")]
-    Variant0,
-    #[serde(rename = "1")]
-    Variant1,
-}
-
-impl Default for LayoutGrow {
-    fn default() -> LayoutGrow {
-        Self::Variant0
-    }
-}
 /// Determines whether a layer's size and position should be determined by auto-layout settings or manually adjustable.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum LayoutPositioning {

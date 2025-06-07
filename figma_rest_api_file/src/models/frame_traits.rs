@@ -19,9 +19,6 @@ pub struct FrameTraits {
     /// The name given to the node by the user in the tool.
     #[serde(rename = "name")]
     pub name: String,
-    /// The type of the node
-    #[serde(rename = "type")]
-    pub r#type: String,
     /// Whether or not the node is visible on the canvas.
     #[serde(rename = "visible", skip_serializing_if = "Option::is_none")]
     pub visible: Option<bool>,
@@ -58,10 +55,6 @@ pub struct FrameTraits {
     /// An array of nodes that are direct children of this node
     #[serde(rename = "children")]
     pub children: Vec<models::SubcanvasNode>,
-    #[serde(rename = "absoluteBoundingBox")]
-    pub absolute_bounding_box: Box<models::Rectangle>,
-    #[serde(rename = "absoluteRenderBounds")]
-    pub absolute_render_bounds: Box<models::Rectangle>,
     /// Keep height and width constrained to same ratio.
     #[serde(rename = "preserveRatio", skip_serializing_if = "Option::is_none")]
     pub preserve_ratio: Option<bool>,
@@ -79,7 +72,7 @@ pub struct FrameTraits {
     pub layout_align: Option<LayoutAlign>,
     /// This property is applicable only for direct children of auto-layout frames, ignored otherwise. Determines whether a layer should stretch along the parent's primary axis. A `0` corresponds to a fixed size and `1` corresponds to stretch.
     #[serde(rename = "layoutGrow", skip_serializing_if = "Option::is_none")]
-    pub layout_grow: Option<LayoutGrow>,
+    pub layout_grow: Option<f64>,
     /// Determines whether a layer's size and position should be determined by auto-layout settings or manually adjustable.
     #[serde(rename = "layoutPositioning", skip_serializing_if = "Option::is_none")]
     pub layout_positioning: Option<LayoutPositioning>,
@@ -191,9 +184,6 @@ pub struct FrameTraits {
     /// An array of floating point numbers describing the pattern of dash length and gap lengths that the vector stroke will use when drawn.  For example a value of [1, 2] indicates that the stroke will be drawn with a dash of length 1 followed by a gap of length 2, repeated.
     #[serde(rename = "strokeDashes", skip_serializing_if = "Option::is_none")]
     pub stroke_dashes: Option<Vec<f64>>,
-    /// Map from ID to PaintOverride for looking up fill overrides. To see which regions are overriden, you must use the `geometry=paths` option. Each path returned may have an `overrideID` which maps to this table.
-    #[serde(rename = "fillOverrideTable", skip_serializing_if = "Option::is_none")]
-    pub fill_override_table: Option<std::collections::HashMap<String, models::HasGeometryTraitAllOfFillOverrideTable>>,
     /// Only specified if parameter `geometry=paths` is used. An array of paths representing the object fill.
     #[serde(rename = "fillGeometry", skip_serializing_if = "Option::is_none")]
     pub fill_geometry: Option<Vec<models::Path>>,
@@ -238,11 +228,10 @@ pub struct FrameTraits {
 }
 
 impl FrameTraits {
-    pub fn new(id: String, name: String, r#type: String, scroll_behavior: ScrollBehavior, blend_mode: models::BlendMode, children: Vec<models::SubcanvasNode>, absolute_bounding_box: models::Rectangle, absolute_render_bounds: models::Rectangle, clips_content: bool, fills: Vec<models::Paint>, effects: Vec<models::Effect>) -> FrameTraits {
+    pub fn new(id: String, name: String, scroll_behavior: ScrollBehavior, blend_mode: models::BlendMode, children: Vec<models::SubcanvasNode>, clips_content: bool, fills: Vec<models::Paint>, effects: Vec<models::Effect>) -> FrameTraits {
         FrameTraits {
             id,
             name,
-            r#type,
             visible: None,
             locked: None,
             is_fixed: None,
@@ -256,8 +245,6 @@ impl FrameTraits {
             blend_mode,
             opacity: None,
             children,
-            absolute_bounding_box: Box::new(absolute_bounding_box),
-            absolute_render_bounds: Box::new(absolute_render_bounds),
             preserve_ratio: None,
             constraints: None,
             relative_transform: None,
@@ -301,7 +288,6 @@ impl FrameTraits {
             stroke_align: None,
             stroke_join: None,
             stroke_dashes: None,
-            fill_override_table: None,
             fill_geometry: None,
             stroke_geometry: None,
             stroke_cap: None,
@@ -353,20 +339,6 @@ pub enum LayoutAlign {
 impl Default for LayoutAlign {
     fn default() -> LayoutAlign {
         Self::Inherit
-    }
-}
-/// This property is applicable only for direct children of auto-layout frames, ignored otherwise. Determines whether a layer should stretch along the parent's primary axis. A `0` corresponds to a fixed size and `1` corresponds to stretch.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum LayoutGrow {
-    #[serde(rename = "0")]
-    Variant0,
-    #[serde(rename = "1")]
-    Variant1,
-}
-
-impl Default for LayoutGrow {
-    fn default() -> LayoutGrow {
-        Self::Variant0
     }
 }
 /// Determines whether a layer's size and position should be determined by auto-layout settings or manually adjustable.

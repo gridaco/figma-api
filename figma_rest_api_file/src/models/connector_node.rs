@@ -19,9 +19,6 @@ pub struct ConnectorNode {
     /// The name given to the node by the user in the tool.
     #[serde(rename = "name")]
     pub name: String,
-    /// The type of this node, represented by the string literal \"CONNECTOR\"
-    #[serde(rename = "type")]
-    pub r#type: Type,
     /// Whether or not the node is visible on the canvas.
     #[serde(rename = "visible", skip_serializing_if = "Option::is_none")]
     pub visible: Option<bool>,
@@ -49,10 +46,6 @@ pub struct ConnectorNode {
     /// A mapping of variable collection ID to mode ID representing the explicitly set modes for this node.
     #[serde(rename = "explicitVariableModes", skip_serializing_if = "Option::is_none")]
     pub explicit_variable_modes: Option<std::collections::HashMap<String, String>>,
-    #[serde(rename = "absoluteBoundingBox")]
-    pub absolute_bounding_box: Box<models::Rectangle>,
-    #[serde(rename = "absoluteRenderBounds")]
-    pub absolute_render_bounds: Box<models::Rectangle>,
     /// Keep height and width constrained to same ratio.
     #[serde(rename = "preserveRatio", skip_serializing_if = "Option::is_none")]
     pub preserve_ratio: Option<bool>,
@@ -70,7 +63,7 @@ pub struct ConnectorNode {
     pub layout_align: Option<LayoutAlign>,
     /// This property is applicable only for direct children of auto-layout frames, ignored otherwise. Determines whether a layer should stretch along the parent's primary axis. A `0` corresponds to a fixed size and `1` corresponds to stretch.
     #[serde(rename = "layoutGrow", skip_serializing_if = "Option::is_none")]
-    pub layout_grow: Option<LayoutGrow>,
+    pub layout_grow: Option<f64>,
     /// Determines whether a layer's size and position should be determined by auto-layout settings or manually adjustable.
     #[serde(rename = "layoutPositioning", skip_serializing_if = "Option::is_none")]
     pub layout_positioning: Option<LayoutPositioning>,
@@ -143,11 +136,10 @@ pub struct ConnectorNode {
 }
 
 impl ConnectorNode {
-    pub fn new(id: String, name: String, r#type: Type, scroll_behavior: ScrollBehavior, absolute_bounding_box: models::Rectangle, absolute_render_bounds: models::Rectangle, blend_mode: models::BlendMode, effects: Vec<models::Effect>, characters: String, connector_start: models::ConnectorEndpoint, connector_end: models::ConnectorEndpoint, connector_start_stroke_cap: ConnectorStartStrokeCap, connector_end_stroke_cap: ConnectorEndStrokeCap, connector_line_type: models::ConnectorLineType) -> ConnectorNode {
+    pub fn new(id: String, name: String, scroll_behavior: ScrollBehavior, blend_mode: models::BlendMode, effects: Vec<models::Effect>, characters: String, connector_start: models::ConnectorEndpoint, connector_end: models::ConnectorEndpoint, connector_start_stroke_cap: ConnectorStartStrokeCap, connector_end_stroke_cap: ConnectorEndStrokeCap, connector_line_type: models::ConnectorLineType) -> ConnectorNode {
         ConnectorNode {
             id,
             name,
-            r#type,
             visible: None,
             locked: None,
             is_fixed: None,
@@ -158,8 +150,6 @@ impl ConnectorNode {
             shared_plugin_data: None,
             bound_variables: None,
             explicit_variable_modes: None,
-            absolute_bounding_box: Box::new(absolute_bounding_box),
-            absolute_render_bounds: Box::new(absolute_render_bounds),
             preserve_ratio: None,
             constraints: None,
             relative_transform: None,
@@ -190,18 +180,6 @@ impl ConnectorNode {
             connector_line_type,
             text_background: None,
         }
-    }
-}
-/// The type of this node, represented by the string literal \"CONNECTOR\"
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Type {
-    #[serde(rename = "CONNECTOR")]
-    Connector,
-}
-
-impl Default for Type {
-    fn default() -> Type {
-        Self::Connector
     }
 }
 /// How layer should be treated when the frame is resized
@@ -238,20 +216,6 @@ pub enum LayoutAlign {
 impl Default for LayoutAlign {
     fn default() -> LayoutAlign {
         Self::Inherit
-    }
-}
-/// This property is applicable only for direct children of auto-layout frames, ignored otherwise. Determines whether a layer should stretch along the parent's primary axis. A `0` corresponds to a fixed size and `1` corresponds to stretch.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum LayoutGrow {
-    #[serde(rename = "0")]
-    Variant0,
-    #[serde(rename = "1")]
-    Variant1,
-}
-
-impl Default for LayoutGrow {
-    fn default() -> LayoutGrow {
-        Self::Variant0
     }
 }
 /// Determines whether a layer's size and position should be determined by auto-layout settings or manually adjustable.

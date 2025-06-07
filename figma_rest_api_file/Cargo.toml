@@ -24,4 +24,5 @@ url = "^2.5"
 reqwest = { version = "^0.12", optional = true }
 
 [dev-dependencies]
-tokio = { version = "1.45.1", features = ["rt", "macros", "test-util"] }
+serde_path_to_error = "0.1.17"
+tokio = { version = "1.45.1", features = ["full", "macros", "rt-multi-thread"] }

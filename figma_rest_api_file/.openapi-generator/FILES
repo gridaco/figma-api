@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 .travis.yml
 Cargo.toml
 README.md
@@ -7,6 +6,7 @@ docs/Action.md
 docs/ActionOneOf.md
 docs/AfterTimeoutTrigger.md
 docs/ArcData.md
+docs/BackgroundBlurEffect.md
 docs/BaseBlurEffect.md
 docs/BaseBlurEffectBoundVariables.md
 docs/BaseNoiseEffect.md
@@ -82,7 +82,6 @@ docs/HasEffectsTrait.md
 docs/HasExportSettingsTrait.md
 docs/HasFramePropertiesTrait.md
 docs/HasGeometryTrait.md
-docs/HasGeometryTraitAllOfFillOverrideTable.md
 docs/HasLayoutTrait.md
 docs/HasMaskTrait.md
 docs/HasTextSublayerTrait.md
@@ -136,6 +135,7 @@ docs/IsLayerTraitBoundVariables.md
 docs/IsLayerTraitBoundVariablesIndividualStrokeWeights.md
 docs/IsLayerTraitBoundVariablesRectangleCornerRadii.md
 docs/IsLayerTraitBoundVariablesSize.md
+docs/LayerBlurEffect.md
 docs/LayoutConstraint.md
 docs/LayoutGrid.md
 docs/LayoutGridBoundVariables.md
@@ -263,6 +263,7 @@ src/models/action.rs
 src/models/action_one_of.rs
 src/models/after_timeout_trigger.rs
 src/models/arc_data.rs
+src/models/background_blur_effect.rs
 src/models/base_blur_effect.rs
 src/models/base_blur_effect_bound_variables.rs
 src/models/base_noise_effect.rs
@@ -335,7 +336,6 @@ src/models/has_effects_trait.rs
 src/models/has_export_settings_trait.rs
 src/models/has_frame_properties_trait.rs
 src/models/has_geometry_trait.rs
-src/models/has_geometry_trait_all_of_fill_override_table.rs
 src/models/has_layout_trait.rs
 src/models/has_mask_trait.rs
 src/models/has_text_sublayer_trait.rs
@@ -389,6 +389,7 @@ src/models/is_layer_trait_bound_variables.rs
 src/models/is_layer_trait_bound_variables_individual_stroke_weights.rs
 src/models/is_layer_trait_bound_variables_rectangle_corner_radii.rs
 src/models/is_layer_trait_bound_variables_size.rs
+src/models/layer_blur_effect.rs
 src/models/layout_constraint.rs
 src/models/layout_grid.rs
 src/models/layout_grid_bound_variables.rs

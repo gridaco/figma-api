@@ -84,28 +84,65 @@ path = Path("openapi.file.yaml")
 
 data = yaml.load(path)
 
+# Merge in overrides from openapi.rust.overrides.yaml
+override_path = Path("openapi.rust.overrides.yaml")
+if override_path.exists():
+    override_data = yaml.load(override_path)
+
+    # Set of keys that should be FULLY replaced (not merged) even if both values are dicts
+    FULL_REPLACE_KEYS = {"HasLayoutTrait.properties.layoutGrow"}
+
+    def deep_merge(a, b, path=""):
+        for key, value in b.items():
+            full_key = f"{path}.{key}" if path else key
+            if (
+                full_key in FULL_REPLACE_KEYS
+                or not isinstance(value, dict)
+                or key not in a
+                or not isinstance(a[key], dict)
+            ):
+                a[key] = value
+            else:
+                deep_merge(a[key], value, full_key)
+
+    for k, v in override_data.get("components", {}).get("schemas", {}).items():
+        print(f"🔁 Overriding schema: {k}")
+        base = data["components"]["schemas"].setdefault(k, {})
+        deep_merge(base, v, k)
+
+
 schemas = data["components"]["schemas"]
-node_discriminator = schemas.get("Node", {}).get("discriminator", {})
-mapping = node_discriminator.get("mapping", {})
+#
+# Find all discriminator definitions across all schemas
+discriminator_targets = {}
+for schema_name, schema in schemas.items():
+    if "discriminator" in schema:
+        discriminator = schema["discriminator"]
+        prop_name = discriminator.get("propertyName")
+        mapping = discriminator.get("mapping", {})
+        for ref in mapping.values():
+            variant_name = ref.split("/")[-1]
+            discriminator_targets.setdefault(
+                variant_name, []).append(prop_name)
 
-for tag, ref in mapping.items():
-    schema_name = ref.split("/")[-1]
+# Remove discriminator fields from all target schemas
+for schema_name, prop_names in discriminator_targets.items():
     schema = schemas.get(schema_name)
-
     if not schema:
         print(f"⚠️ Schema {schema_name} not found.")
         continue
-
     print(f"✂️  Cleaning discriminator target: {schema_name}")
-
     all_of = schema.get("allOf", [])
     for item in all_of:
         if isinstance(item, dict) and item.get("type") == "object":
             props = item.get("properties", {})
-            props.pop("type", None)
-
+            for prop_name in prop_names:
+                props.pop(prop_name, None)
             if "required" in item and isinstance(item["required"], list):
-                item["required"] = [r for r in item["required"] if r != "type"]
+                item["required"] = [
+                    r for r in item["required"] if r not in prop_names
+                ]
+
 
 layer_trait = schemas.get("IsLayerTrait")
 if layer_trait and isinstance(layer_trait, dict):
@@ -115,6 +152,49 @@ if layer_trait and isinstance(layer_trait, dict):
     if "required" in layer_trait:
         layer_trait["required"] = [
             r for r in layer_trait["required"] if r != "type"]
+
+# HARD_REMOVED_PROPS
+# -------------------
+# This is a list of field names that will be forcibly and unconditionally removed from *all* schemas.
+# It is used as a last-resort solution for fields that are:
+#   - consistently causing deserialization failures (e.g. invalid type: null, expected struct ...)
+#   - too structurally inconsistent across the API
+#   - not currently needed in our Rust model usage
+#
+# Examples:
+# - "fillOverrideTable" uses oneOf + nullable object maps that do not generate clean Rust types
+# - "absoluteRenderBounds" often appears as null but is typed as a non-optional struct
+#
+# These will be removed from every `properties` object in all matching schemas regardless of context.
+#
+# Rust errors typically look like:
+#     Error("invalid type: null, expected struct Rectangle")
+#
+# Which happens when a struct like this:
+#     pub absolute_render_bounds: Rectangle,
+#
+# is fed `null` in the JSON:
+#     "absoluteRenderBounds": null
+#
+# But we currently do not use this field, so it is safer to exclude it from generation entirely.
+HARD_REMOVED_PROPS = {"fillOverrideTable",
+                      "absoluteBoundingBox", "absoluteRenderBounds"}
+
+# Apply HARD_REMOVED_PROPS to every schema
+for schema_name, schema in schemas.items():
+    targets = []
+    if schema.get("type") == "object":
+        targets.append(schema)
+    if "allOf" in schema:
+        for item in schema["allOf"]:
+            if isinstance(item, dict) and item.get("type") == "object":
+                targets.append(item)
+    for target in targets:
+        props = target.get("properties", {})
+        for key in HARD_REMOVED_PROPS:
+            if key in props:
+                print(f"❌ Hard removing `{key}` from {schema_name}")
+                props.pop(key)
 
 yaml.dump(data, Path("openapi.file.rust.yaml"))
 print("✅ Done. Discriminator 'type' fields removed.")

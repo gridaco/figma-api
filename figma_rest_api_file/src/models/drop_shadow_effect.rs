@@ -33,16 +33,13 @@ pub struct DropShadowEffect {
     pub visible: bool,
     #[serde(rename = "boundVariables", skip_serializing_if = "Option::is_none")]
     pub bound_variables: Option<Box<models::BaseShadowEffectBoundVariables>>,
-    /// A string literal representing the effect's type. Always check the type before reading other properties.
-    #[serde(rename = "type")]
-    pub r#type: Type,
     /// Whether to show the shadow behind translucent or transparent pixels
     #[serde(rename = "showShadowBehindNode")]
     pub show_shadow_behind_node: bool,
 }
 
 impl DropShadowEffect {
-    pub fn new(color: models::Rgba, blend_mode: models::BlendMode, offset: models::Vector, radius: f64, visible: bool, r#type: Type, show_shadow_behind_node: bool) -> DropShadowEffect {
+    pub fn new(color: models::Rgba, blend_mode: models::BlendMode, offset: models::Vector, radius: f64, visible: bool, show_shadow_behind_node: bool) -> DropShadowEffect {
         DropShadowEffect {
             color: Box::new(color),
             blend_mode,
@@ -51,21 +48,8 @@ impl DropShadowEffect {
             spread: None,
             visible,
             bound_variables: None,
-            r#type,
             show_shadow_behind_node,
         }
-    }
-}
-/// A string literal representing the effect's type. Always check the type before reading other properties.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Type {
-    #[serde(rename = "DROP_SHADOW")]
-    DropShadow,
-}
-
-impl Default for Type {
-    fn default() -> Type {
-        Self::DropShadow
     }
 }
 

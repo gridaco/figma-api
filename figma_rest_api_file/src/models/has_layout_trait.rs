@@ -13,10 +13,6 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct HasLayoutTrait {
-    #[serde(rename = "absoluteBoundingBox", deserialize_with = "Option::deserialize")]
-    pub absolute_bounding_box: Option<Box<models::Rectangle>>,
-    #[serde(rename = "absoluteRenderBounds", deserialize_with = "Option::deserialize")]
-    pub absolute_render_bounds: Option<Box<models::Rectangle>>,
     /// Keep height and width constrained to same ratio.
     #[serde(rename = "preserveRatio", skip_serializing_if = "Option::is_none")]
     pub preserve_ratio: Option<bool>,
@@ -34,7 +30,7 @@ pub struct HasLayoutTrait {
     pub layout_align: Option<LayoutAlign>,
     /// This property is applicable only for direct children of auto-layout frames, ignored otherwise. Determines whether a layer should stretch along the parent's primary axis. A `0` corresponds to a fixed size and `1` corresponds to stretch.
     #[serde(rename = "layoutGrow", skip_serializing_if = "Option::is_none")]
-    pub layout_grow: Option<LayoutGrow>,
+    pub layout_grow: Option<f64>,
     /// Determines whether a layer's size and position should be determined by auto-layout settings or manually adjustable.
     #[serde(rename = "layoutPositioning", skip_serializing_if = "Option::is_none")]
     pub layout_positioning: Option<LayoutPositioning>,
@@ -59,10 +55,8 @@ pub struct HasLayoutTrait {
 }
 
 impl HasLayoutTrait {
-    pub fn new(absolute_bounding_box: Option<models::Rectangle>, absolute_render_bounds: Option<models::Rectangle>) -> HasLayoutTrait {
+    pub fn new() -> HasLayoutTrait {
         HasLayoutTrait {
-            absolute_bounding_box: if let Some(x) = absolute_bounding_box {Some(Box::new(x))} else {None},
-            absolute_render_bounds: if let Some(x) = absolute_render_bounds {Some(Box::new(x))} else {None},
             preserve_ratio: None,
             constraints: None,
             relative_transform: None,
@@ -97,20 +91,6 @@ pub enum LayoutAlign {
 impl Default for LayoutAlign {
     fn default() -> LayoutAlign {
         Self::Inherit
-    }
-}
-/// This property is applicable only for direct children of auto-layout frames, ignored otherwise. Determines whether a layer should stretch along the parent's primary axis. A `0` corresponds to a fixed size and `1` corresponds to stretch.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum LayoutGrow {
-    #[serde(rename = "0")]
-    Variant0,
-    #[serde(rename = "1")]
-    Variant1,
-}
-
-impl Default for LayoutGrow {
-    fn default() -> LayoutGrow {
-        Self::Variant0
     }
 }
 /// Determines whether a layer's size and position should be determined by auto-layout settings or manually adjustable.

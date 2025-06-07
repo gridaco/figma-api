@@ -34,9 +34,6 @@ pub struct HasGeometryTrait {
     /// An array of floating point numbers describing the pattern of dash length and gap lengths that the vector stroke will use when drawn.  For example a value of [1, 2] indicates that the stroke will be drawn with a dash of length 1 followed by a gap of length 2, repeated.
     #[serde(rename = "strokeDashes", skip_serializing_if = "Option::is_none")]
     pub stroke_dashes: Option<Vec<f64>>,
-    /// Map from ID to PaintOverride for looking up fill overrides. To see which regions are overriden, you must use the `geometry=paths` option. Each path returned may have an `overrideID` which maps to this table.
-    #[serde(rename = "fillOverrideTable", skip_serializing_if = "Option::is_none")]
-    pub fill_override_table: Option<std::collections::HashMap<String, models::HasGeometryTraitAllOfFillOverrideTable>>,
     /// Only specified if parameter `geometry=paths` is used. An array of paths representing the object fill.
     #[serde(rename = "fillGeometry", skip_serializing_if = "Option::is_none")]
     pub fill_geometry: Option<Vec<models::Path>>,
@@ -61,7 +58,6 @@ impl HasGeometryTrait {
             stroke_align: None,
             stroke_join: None,
             stroke_dashes: None,
-            fill_override_table: None,
             fill_geometry: None,
             stroke_geometry: None,
             stroke_cap: None,

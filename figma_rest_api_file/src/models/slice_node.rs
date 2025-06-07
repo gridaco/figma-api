@@ -19,9 +19,6 @@ pub struct SliceNode {
     /// The name given to the node by the user in the tool.
     #[serde(rename = "name")]
     pub name: String,
-    /// The type of this node, represented by the string literal \"SLICE\"
-    #[serde(rename = "type")]
-    pub r#type: Type,
     /// Whether or not the node is visible on the canvas.
     #[serde(rename = "visible", skip_serializing_if = "Option::is_none")]
     pub visible: Option<bool>,
@@ -52,11 +49,10 @@ pub struct SliceNode {
 }
 
 impl SliceNode {
-    pub fn new(id: String, name: String, r#type: Type, scroll_behavior: ScrollBehavior) -> SliceNode {
+    pub fn new(id: String, name: String, scroll_behavior: ScrollBehavior) -> SliceNode {
         SliceNode {
             id,
             name,
-            r#type,
             visible: None,
             locked: None,
             is_fixed: None,
@@ -68,18 +64,6 @@ impl SliceNode {
             bound_variables: None,
             explicit_variable_modes: None,
         }
-    }
-}
-/// The type of this node, represented by the string literal \"SLICE\"
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Type {
-    #[serde(rename = "SLICE")]
-    Slice,
-}
-
-impl Default for Type {
-    fn default() -> Type {
-        Self::Slice
     }
 }
 /// How layer should be treated when the frame is resized

@@ -19,9 +19,6 @@ pub struct TableCellNode {
     /// The name given to the node by the user in the tool.
     #[serde(rename = "name")]
     pub name: String,
-    /// The type of this node, represented by the string literal \"TABLE_CELL\"
-    #[serde(rename = "type")]
-    pub r#type: Type,
     /// Whether or not the node is visible on the canvas.
     #[serde(rename = "visible", skip_serializing_if = "Option::is_none")]
     pub visible: Option<bool>,
@@ -55,10 +52,6 @@ pub struct TableCellNode {
     /// A mapping of a StyleType to style ID (see Style) of styles present on this node. The style ID can be used to look up more information about the style in the top-level styles field.
     #[serde(rename = "styles", skip_serializing_if = "Option::is_none")]
     pub styles: Option<std::collections::HashMap<String, String>>,
-    #[serde(rename = "absoluteBoundingBox")]
-    pub absolute_bounding_box: Box<models::Rectangle>,
-    #[serde(rename = "absoluteRenderBounds")]
-    pub absolute_render_bounds: Box<models::Rectangle>,
     /// Keep height and width constrained to same ratio.
     #[serde(rename = "preserveRatio", skip_serializing_if = "Option::is_none")]
     pub preserve_ratio: Option<bool>,
@@ -76,7 +69,7 @@ pub struct TableCellNode {
     pub layout_align: Option<LayoutAlign>,
     /// This property is applicable only for direct children of auto-layout frames, ignored otherwise. Determines whether a layer should stretch along the parent's primary axis. A `0` corresponds to a fixed size and `1` corresponds to stretch.
     #[serde(rename = "layoutGrow", skip_serializing_if = "Option::is_none")]
-    pub layout_grow: Option<LayoutGrow>,
+    pub layout_grow: Option<f64>,
     /// Determines whether a layer's size and position should be determined by auto-layout settings or manually adjustable.
     #[serde(rename = "layoutPositioning", skip_serializing_if = "Option::is_none")]
     pub layout_positioning: Option<LayoutPositioning>,
@@ -104,11 +97,10 @@ pub struct TableCellNode {
 }
 
 impl TableCellNode {
-    pub fn new(id: String, name: String, r#type: Type, scroll_behavior: ScrollBehavior, fills: Vec<models::Paint>, absolute_bounding_box: models::Rectangle, absolute_render_bounds: models::Rectangle, characters: String) -> TableCellNode {
+    pub fn new(id: String, name: String, scroll_behavior: ScrollBehavior, fills: Vec<models::Paint>, characters: String) -> TableCellNode {
         TableCellNode {
             id,
             name,
-            r#type,
             visible: None,
             locked: None,
             is_fixed: None,
@@ -121,8 +113,6 @@ impl TableCellNode {
             explicit_variable_modes: None,
             fills,
             styles: None,
-            absolute_bounding_box: Box::new(absolute_bounding_box),
-            absolute_render_bounds: Box::new(absolute_render_bounds),
             preserve_ratio: None,
             constraints: None,
             relative_transform: None,
@@ -138,18 +128,6 @@ impl TableCellNode {
             layout_sizing_vertical: None,
             characters,
         }
-    }
-}
-/// The type of this node, represented by the string literal \"TABLE_CELL\"
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Type {
-    #[serde(rename = "TABLE_CELL")]
-    TableCell,
-}
-
-impl Default for Type {
-    fn default() -> Type {
-        Self::TableCell
     }
 }
 /// How layer should be treated when the frame is resized
@@ -186,20 +164,6 @@ pub enum LayoutAlign {
 impl Default for LayoutAlign {
     fn default() -> LayoutAlign {
         Self::Inherit
-    }
-}
-/// This property is applicable only for direct children of auto-layout frames, ignored otherwise. Determines whether a layer should stretch along the parent's primary axis. A `0` corresponds to a fixed size and `1` corresponds to stretch.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum LayoutGrow {
-    #[serde(rename = "0")]
-    Variant0,
-    #[serde(rename = "1")]
-    Variant1,
-}
-
-impl Default for LayoutGrow {
-    fn default() -> LayoutGrow {
-        Self::Variant0
     }
 }
 /// Determines whether a layer's size and position should be determined by auto-layout settings or manually adjustable.

@@ -12,20 +12,20 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct HasGeometryTraitAllOfFillOverrideTable {
-    /// Paints applied to characters.
-    #[serde(rename = "fills", skip_serializing_if = "Option::is_none")]
-    pub fills: Option<Vec<models::Paint>>,
-    /// ID of style node, if any, that this inherits fill data from.
-    #[serde(rename = "inheritFillStyleId", skip_serializing_if = "Option::is_none")]
-    pub inherit_fill_style_id: Option<String>,
+pub struct BackgroundBlurEffect {
+    /// Whether this effect is visible
+    #[serde(rename = "visible")]
+    pub visible: bool,
+    /// The blur radius
+    #[serde(rename = "radius")]
+    pub radius: f64,
 }
 
-impl HasGeometryTraitAllOfFillOverrideTable {
-    pub fn new() -> HasGeometryTraitAllOfFillOverrideTable {
-        HasGeometryTraitAllOfFillOverrideTable {
-            fills: None,
-            inherit_fill_style_id: None,
+impl BackgroundBlurEffect {
+    pub fn new(visible: bool, radius: f64) -> BackgroundBlurEffect {
+        BackgroundBlurEffect {
+            visible,
+            radius,
         }
     }
 }
