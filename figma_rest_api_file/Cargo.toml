@@ -1,11 +1,16 @@
 [package]
-name = "openapi"
+name = "figma-api"
 version = "0.31.0"
-authors = ["support@figma.com"]
+authors = ["support@figma.com", "universe@grida.co"]
 description = "This is the OpenAPI specification for the [Figma REST API](https://www.figma.com/developers/api).  Note: we are releasing the OpenAPI specification as a beta given the large surface area and complexity of the REST API. If you notice any inaccuracies with the specification, please [file an issue](https://github.com/figma/rest-api-spec/issues)."
 # Override this license by providing a License Object in the OpenAPI.
-license = "Unlicense"
+license = "MIT"
 edition = "2021"
+repository = "https://github.com/gridaco/figma-api-rust"
+documentation = "https://www.figma.com/developers/api"
+keywords = ["figma", "api", "client"]
+categories = ["api-bindings", "web-programming"]
+
 
 [dependencies]
 serde = { version = "^1.0", features = ["derive"] }
