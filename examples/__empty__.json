@@ -1,0 +1,40 @@
+{
+  "document": {
+    "id": "0:0",
+    "name": "Document",
+    "type": "DOCUMENT",
+    "scrollBehavior": "SCROLLS",
+    "children": [
+      {
+        "id": "0:1",
+        "name": "Page 1",
+        "type": "CANVAS",
+        "scrollBehavior": "SCROLLS",
+        "children": [],
+        "backgroundColor": {
+          "r": 0.11764705926179886,
+          "g": 0.11764705926179886,
+          "b": 0.11764705926179886,
+          "a": 1
+        },
+        "prototypeStartNodeID": null,
+        "flowStartingPoints": [],
+        "prototypeDevice": {
+          "type": "NONE",
+          "rotation": "NONE"
+        }
+      }
+    ]
+  },
+  "components": {},
+  "componentSets": {},
+  "schemaVersion": 0,
+  "styles": {},
+  "name": "__test__/__empty__",
+  "lastModified": "2023-06-19T03:36:10Z",
+  "thumbnailUrl": "https://s3-alpha.figma.com/thumbnails/0f0b190c-a463-45f1-b52c-348c43496edf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQ4GOSFWCWP5TY7EM%2F20250605%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250605T000000Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=bb23e7d9ff84c08e967fcfdfa61bdba54987a55199acc37075beee7897fe5a64",
+  "version": "2226912239699168303",
+  "role": "owner",
+  "editorType": "figma",
+  "linkAccess": "inherit"
+}
