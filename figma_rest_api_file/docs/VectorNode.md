@@ -50,7 +50,6 @@ Name | Type | Description | Notes
 **transition_node_id** | Option<**String**> | Node ID of node to transition to in prototyping | [optional]
 **transition_duration** | Option<**f64**> | The duration of the prototyping transition on this node (in milliseconds). This will override the default transition duration on the prototype, for this node. | [optional]
 **transition_easing** | Option<[**models::EasingType**](EasingType.md)> | The easing curve used in the prototyping transition on this node. | [optional]
-**interactions** | Option<[**Vec<models::Interaction>**](Interaction.md)> |  | [optional]
 **corner_radius** | Option<**f64**> | Radius of each corner if a single radius is set for all corners | [optional][default to 0]
 **corner_smoothing** | Option<**f64**> | A value that lets you control how \"smooth\" the corners are. Ranges from 0 to 1. 0 is the default and means that the corner is perfectly circular. A value of 0.6 means the corner matches the iOS 7 \"squircle\" icon shape. Other values produce various other curves. | [optional]
 **rectangle_corner_radii** | Option<**Vec<f64>**> | Array of length 4 of the radius of each corner of the frame, starting in the top left and proceeding clockwise.  Values are given in the order top-left, top-right, bottom-right, bottom-left. | [optional]

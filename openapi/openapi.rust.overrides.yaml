@@ -55,3 +55,54 @@ components:
         - type
         - visible
         - radius
+    TextureEffect:
+          type: object
+          description: A texture effect
+          properties:
+            noiseSize:
+              type: number
+              description: The size of the texture effect
+            radius:
+              type: number
+              description: The radius of the texture effect
+            clipToShape:
+              type: boolean
+              description: Whether the texture is clipped to the shape
+          required:
+          - noiseSize
+          - radius
+          - clipToShape
+    BaseNoiseEffect:
+      type: object
+      description: A noise effect
+      properties:
+        blendMode:
+          $ref: "#/components/schemas/BlendMode"
+          description: Blend mode of the noise effect
+        noiseSize:
+          type: number
+          description: The size of the noise effect
+        density:
+          type: number
+          description: The density of the noise effect
+      required:
+      - noiseSize
+      - density
+      - blendMode
+    NoiseEffect:
+      allOf:
+        - $ref: "#/components/schemas/BaseNoiseEffect"
+        - type: object
+          properties:
+            noiseType:
+              type: string
+              enum:
+                - MONOTONE
+                - MULTITONE
+                - DUOTONE
+            opacity:
+              type: number
+            secondaryColor:
+              $ref: "#/components/schemas/RGBA"
+          required:
+            - noiseType

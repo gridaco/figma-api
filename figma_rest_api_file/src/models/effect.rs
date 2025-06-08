@@ -34,16 +34,20 @@ impl Default for Effect {
     }
 }
 
-/// The string literal 'DUOTONE' representing the noise type.
+/// 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum NoiseType {
+    #[serde(rename = "MONOTONE")]
+    Monotone,
+    #[serde(rename = "MULTITONE")]
+    Multitone,
     #[serde(rename = "DUOTONE")]
     Duotone,
 }
 
 impl Default for NoiseType {
     fn default() -> NoiseType {
-        Self::Duotone
+        Self::Monotone
     }
 }
 

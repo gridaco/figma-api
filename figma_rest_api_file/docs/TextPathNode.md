@@ -50,7 +50,6 @@ Name | Type | Description | Notes
 **transition_node_id** | Option<**String**> | Node ID of node to transition to in prototyping | [optional]
 **transition_duration** | Option<**f64**> | The duration of the prototyping transition on this node (in milliseconds). This will override the default transition duration on the prototype, for this node. | [optional]
 **transition_easing** | Option<[**models::EasingType**](EasingType.md)> | The easing curve used in the prototyping transition on this node. | [optional]
-**interactions** | Option<[**Vec<models::Interaction>**](Interaction.md)> |  | [optional]
 **characters** | **String** | The raw characters in the text path node. | 
 **style** | [**models::TextPathTypeStyle**](TextPathTypeStyle.md) | Style of text including font family and weight. | 
 **character_style_overrides** | **Vec<f64>** | The array corresponds to characters in the text box, where each element references the 'styleOverrideTable' to apply specific styles to each character. The array's length can be less than or equal to the number of characters due to the removal of trailing zeros. Elements with a value of 0 indicate characters that use the default type style. If the array is shorter than the total number of characters, the characters beyond the array's length also use the default style. | 

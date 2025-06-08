@@ -220,8 +220,6 @@ pub struct ComponentNode {
     /// The easing curve used in the prototyping transition on this node.
     #[serde(rename = "transitionEasing", skip_serializing_if = "Option::is_none")]
     pub transition_easing: Option<models::EasingType>,
-    #[serde(rename = "interactions", skip_serializing_if = "Option::is_none")]
-    pub interactions: Option<Vec<models::Interaction>>,
     /// An object including the top, bottom, left, and right stroke weights. Only returned if individual stroke weights are used.
     #[serde(rename = "individualStrokeWeights", skip_serializing_if = "Option::is_none")]
     pub individual_stroke_weights: Option<Box<models::StrokeWeights>>,
@@ -303,7 +301,6 @@ impl ComponentNode {
             transition_node_id: None,
             transition_duration: None,
             transition_easing: None,
-            interactions: None,
             individual_stroke_weights: None,
             component_property_definitions: None,
         }

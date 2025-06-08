@@ -14,9 +14,6 @@ use serde::{Deserialize, Serialize};
 /// TextureEffect : A texture effect
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct TextureEffect {
-    /// The string literal 'TEXTURE' representing the effect's type. Always check the type before reading other properties.
-    #[serde(rename = "type")]
-    pub r#type: Type,
     /// The size of the texture effect
     #[serde(rename = "noiseSize")]
     pub noise_size: f64,
@@ -30,25 +27,12 @@ pub struct TextureEffect {
 
 impl TextureEffect {
     /// A texture effect
-    pub fn new(r#type: Type, noise_size: f64, radius: f64, clip_to_shape: bool) -> TextureEffect {
+    pub fn new(noise_size: f64, radius: f64, clip_to_shape: bool) -> TextureEffect {
         TextureEffect {
-            r#type,
             noise_size,
             radius,
             clip_to_shape,
         }
-    }
-}
-/// The string literal 'TEXTURE' representing the effect's type. Always check the type before reading other properties.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Type {
-    #[serde(rename = "TEXTURE")]
-    Texture,
-}
-
-impl Default for Type {
-    fn default() -> Type {
-        Self::Texture
     }
 }
 

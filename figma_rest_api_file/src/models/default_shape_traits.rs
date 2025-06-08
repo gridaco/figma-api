@@ -148,8 +148,6 @@ pub struct DefaultShapeTraits {
     /// The easing curve used in the prototyping transition on this node.
     #[serde(rename = "transitionEasing", skip_serializing_if = "Option::is_none")]
     pub transition_easing: Option<models::EasingType>,
-    #[serde(rename = "interactions", skip_serializing_if = "Option::is_none")]
-    pub interactions: Option<Vec<models::Interaction>>,
 }
 
 impl DefaultShapeTraits {
@@ -201,7 +199,6 @@ impl DefaultShapeTraits {
             transition_node_id: None,
             transition_duration: None,
             transition_easing: None,
-            interactions: None,
         }
     }
 }

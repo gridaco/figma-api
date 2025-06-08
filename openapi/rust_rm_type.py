@@ -90,7 +90,10 @@ if override_path.exists():
     override_data = yaml.load(override_path)
 
     # Set of keys that should be FULLY replaced (not merged) even if both values are dicts
-    FULL_REPLACE_KEYS = {"HasLayoutTrait.properties.layoutGrow"}
+    FULL_REPLACE_KEYS = {
+        "HasLayoutTrait.properties.layoutGrow", "TextureEffect",
+        "BaseNoiseEffect", "NoiseEffect",
+    }
 
     def deep_merge(a, b, path=""):
         for key, value in b.items():
@@ -107,8 +110,11 @@ if override_path.exists():
 
     for k, v in override_data.get("components", {}).get("schemas", {}).items():
         print(f"🔁 Overriding schema: {k}")
-        base = data["components"]["schemas"].setdefault(k, {})
-        deep_merge(base, v, k)
+        if k in FULL_REPLACE_KEYS:
+            data["components"]["schemas"][k] = v
+        else:
+            base = data["components"]["schemas"].setdefault(k, {})
+            deep_merge(base, v, k)
 
 
 schemas = data["components"]["schemas"]
@@ -178,7 +184,7 @@ if layer_trait and isinstance(layer_trait, dict):
 #
 # But we currently do not use this field, so it is safer to exclude it from generation entirely.
 HARD_REMOVED_PROPS = {"fillOverrideTable",
-                      "absoluteBoundingBox", "absoluteRenderBounds"}
+                      "absoluteBoundingBox", "absoluteRenderBounds", "interactions"}
 
 # Apply HARD_REMOVED_PROPS to every schema
 for schema_name, schema in schemas.items():

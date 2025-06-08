@@ -11,41 +11,51 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum NoiseEffect {
-    MonotoneNoiseEffect(Box<models::MonotoneNoiseEffect>),
-    MultitoneNoiseEffect(Box<models::MultitoneNoiseEffect>),
-    DuotoneNoiseEffect(Box<models::DuotoneNoiseEffect>),
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct NoiseEffect {
+    /// Blend mode of the noise effect
+    #[serde(rename = "blendMode")]
+    pub blend_mode: models::BlendMode,
+    /// The size of the noise effect
+    #[serde(rename = "noiseSize")]
+    pub noise_size: f64,
+    /// The density of the noise effect
+    #[serde(rename = "density")]
+    pub density: f64,
+    #[serde(rename = "noiseType")]
+    pub noise_type: NoiseType,
+    #[serde(rename = "opacity", skip_serializing_if = "Option::is_none")]
+    pub opacity: Option<f64>,
+    #[serde(rename = "secondaryColor", skip_serializing_if = "Option::is_none")]
+    pub secondary_color: Option<Box<models::Rgba>>,
 }
 
-impl Default for NoiseEffect {
-    fn default() -> Self {
-        Self::MonotoneNoiseEffect(Default::default())
+impl NoiseEffect {
+    pub fn new(blend_mode: models::BlendMode, noise_size: f64, density: f64, noise_type: NoiseType) -> NoiseEffect {
+        NoiseEffect {
+            blend_mode,
+            noise_size,
+            density,
+            noise_type,
+            opacity: None,
+            secondary_color: None,
+        }
     }
 }
-/// The string literal 'DUOTONE' representing the noise type.
+/// 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum NoiseType {
+    #[serde(rename = "MONOTONE")]
+    Monotone,
+    #[serde(rename = "MULTITONE")]
+    Multitone,
     #[serde(rename = "DUOTONE")]
     Duotone,
 }
 
 impl Default for NoiseType {
     fn default() -> NoiseType {
-        Self::Duotone
-    }
-}
-/// The string literal 'NOISE' representing the effect's type. Always check the type before reading other properties.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Type {
-    #[serde(rename = "NOISE")]
-    Noise,
-}
-
-impl Default for Type {
-    fn default() -> Type {
-        Self::Noise
+        Self::Monotone
     }
 }
 

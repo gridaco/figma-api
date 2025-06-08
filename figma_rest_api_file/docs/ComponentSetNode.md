@@ -74,7 +74,6 @@ Name | Type | Description | Notes
 **transition_node_id** | Option<**String**> | Node ID of node to transition to in prototyping | [optional]
 **transition_duration** | Option<**f64**> | The duration of the prototyping transition on this node (in milliseconds). This will override the default transition duration on the prototype, for this node. | [optional]
 **transition_easing** | Option<[**models::EasingType**](EasingType.md)> | The easing curve used in the prototyping transition on this node. | [optional]
-**interactions** | Option<[**Vec<models::Interaction>**](Interaction.md)> |  | [optional]
 **individual_stroke_weights** | Option<[**models::StrokeWeights**](StrokeWeights.md)> | An object including the top, bottom, left, and right stroke weights. Only returned if individual stroke weights are used. | [optional]
 **component_property_definitions** | Option<[**std::collections::HashMap<String, models::ComponentPropertyDefinition>**](ComponentPropertyDefinition.md)> | A mapping of name to `ComponentPropertyDefinition` for every component property on this component. Each property has a type, defaultValue, and other optional values. | [optional]
 

@@ -1472,13 +1472,6 @@ components:
           $ref: "#/components/schemas/EasingType"
           description: The easing curve used in the prototyping transition on 
             this node.
-        interactions:
-          type: array
-          items:
-            $ref: "#/components/schemas/Interaction"
-            description: An array of the interactions on this node, each 
-              containing a trigger and one or more actions.
-
     AnnotationsTrait:
       type: object
       properties: {}
@@ -2761,12 +2754,6 @@ components:
       type: object
       description: A texture effect
       properties:
-        type:
-          type: string
-          description: The string literal 'TEXTURE' representing the effect's 
-            type. Always check the type before reading other properties.
-          enum:
-          - TEXTURE
         noiseSize:
           type: number
           description: The size of the texture effect
@@ -2777,7 +2764,6 @@ components:
           type: boolean
           description: Whether the texture is clipped to the shape
       required:
-      - type
       - noiseSize
       - radius
       - clipToShape
@@ -2835,12 +2821,6 @@ components:
       type: object
       description: A noise effect
       properties:
-        type:
-          type: string
-          description: The string literal 'NOISE' representing the effect's 
-            type. Always check the type before reading other properties.
-          enum:
-          - NOISE
         blendMode:
           $ref: "#/components/schemas/BlendMode"
           description: Blend mode of the noise effect
@@ -2851,15 +2831,26 @@ components:
           type: number
           description: The density of the noise effect
       required:
-      - type
       - noiseSize
       - density
       - blendMode
     NoiseEffect:
-      oneOf:
-      - $ref: "#/components/schemas/MonotoneNoiseEffect"
-      - $ref: "#/components/schemas/MultitoneNoiseEffect"
-      - $ref: "#/components/schemas/DuotoneNoiseEffect"
+      allOf:
+      - $ref: "#/components/schemas/BaseNoiseEffect"
+      - type: object
+        properties:
+          noiseType:
+            type: string
+            enum:
+            - MONOTONE
+            - MULTITONE
+            - DUOTONE
+          opacity:
+            type: number
+          secondaryColor:
+            $ref: "#/components/schemas/RGBA"
+        required:
+        - noiseType
     Effect:
       oneOf:
       - $ref: "#/components/schemas/DropShadowEffect"

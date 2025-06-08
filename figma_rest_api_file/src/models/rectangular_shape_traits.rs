@@ -148,8 +148,6 @@ pub struct RectangularShapeTraits {
     /// The easing curve used in the prototyping transition on this node.
     #[serde(rename = "transitionEasing", skip_serializing_if = "Option::is_none")]
     pub transition_easing: Option<models::EasingType>,
-    #[serde(rename = "interactions", skip_serializing_if = "Option::is_none")]
-    pub interactions: Option<Vec<models::Interaction>>,
     /// Radius of each corner if a single radius is set for all corners
     #[serde(rename = "cornerRadius", skip_serializing_if = "Option::is_none")]
     pub corner_radius: Option<f64>,
@@ -213,7 +211,6 @@ impl RectangularShapeTraits {
             transition_node_id: None,
             transition_duration: None,
             transition_easing: None,
-            interactions: None,
             corner_radius: None,
             corner_smoothing: None,
             rectangle_corner_radii: None,

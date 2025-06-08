@@ -14,9 +14,6 @@ use serde::{Deserialize, Serialize};
 /// BaseNoiseEffect : A noise effect
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct BaseNoiseEffect {
-    /// The string literal 'NOISE' representing the effect's type. Always check the type before reading other properties.
-    #[serde(rename = "type")]
-    pub r#type: Type,
     /// Blend mode of the noise effect
     #[serde(rename = "blendMode")]
     pub blend_mode: models::BlendMode,
@@ -30,25 +27,12 @@ pub struct BaseNoiseEffect {
 
 impl BaseNoiseEffect {
     /// A noise effect
-    pub fn new(r#type: Type, blend_mode: models::BlendMode, noise_size: f64, density: f64) -> BaseNoiseEffect {
+    pub fn new(blend_mode: models::BlendMode, noise_size: f64, density: f64) -> BaseNoiseEffect {
         BaseNoiseEffect {
-            r#type,
             blend_mode,
             noise_size,
             density,
         }
-    }
-}
-/// The string literal 'NOISE' representing the effect's type. Always check the type before reading other properties.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Type {
-    #[serde(rename = "NOISE")]
-    Noise,
-}
-
-impl Default for Type {
-    fn default() -> Type {
-        Self::Noise
     }
 }
 
