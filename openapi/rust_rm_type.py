@@ -91,6 +91,7 @@ if override_path.exists():
 
     # Set of keys that should be FULLY replaced (not merged) even if both values are dicts
     FULL_REPLACE_KEYS = {
+        "GetImageFillsResponse",
         "HasLayoutTrait.properties.layoutGrow", "TextureEffect",
         "BaseNoiseEffect", "NoiseEffect",
     }
@@ -108,12 +109,22 @@ if override_path.exists():
             else:
                 deep_merge(a[key], value, full_key)
 
+    # Handle components.schemas overrides
     for k, v in override_data.get("components", {}).get("schemas", {}).items():
         print(f"🔁 Overriding schema: {k}")
         if k in FULL_REPLACE_KEYS:
             data["components"]["schemas"][k] = v
         else:
             base = data["components"]["schemas"].setdefault(k, {})
+            deep_merge(base, v, k)
+
+    # Handle components.responses overrides
+    for k, v in override_data.get("components", {}).get("responses", {}).items():
+        print(f"🔁 Overriding response: {k}")
+        if k in FULL_REPLACE_KEYS:
+            data["components"]["responses"][k] = v
+        else:
+            base = data["components"]["responses"].setdefault(k, {})
             deep_merge(base, v, k)
 
 

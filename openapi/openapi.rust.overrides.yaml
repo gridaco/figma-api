@@ -1,4 +1,25 @@
 components:
+  responses:
+    GetImageFillsResponse:
+      description: Response from the GET /v1/files/{file_key}/images endpoint.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                type: object
+                properties:
+                  images:
+                    type: object
+                    description: A map of image references to URLs of the image fills.
+                    additionalProperties:
+                      type: string
+                      format: uri
+                required:
+                  - images
+            required:
+              - meta
   schemas:
     HasLayoutTrait:
       properties:

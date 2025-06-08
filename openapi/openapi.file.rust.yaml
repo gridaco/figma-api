@@ -5433,17 +5433,6 @@ components:
           schema:
             type: object
             properties:
-              error:
-                type: boolean
-                description: For successful requests, this value is always 
-                  `false`.
-                enum:
-                - false
-              status:
-                type: number
-                description: Status code
-                enum:
-                - 200
               meta:
                 type: object
                 properties:
@@ -5453,15 +5442,11 @@ components:
                       fills.
                     additionalProperties:
                       type: string
-                      description: A URL to the requested image fill.
                       format: uri
                 required:
                 - images
             required:
-            - error
-            - status
             - meta
-
     GetFileMetaResponse:
       description: Response from the GET /v1/files/{file_key}/meta endpoint.
       content:

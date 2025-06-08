@@ -13,47 +13,15 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct InlineObject3 {
-    /// For successful requests, this value is always `false`.
-    #[serde(rename = "error")]
-    pub error: Error,
-    /// Status code
-    #[serde(rename = "status")]
-    pub status: Status,
     #[serde(rename = "meta")]
     pub meta: Box<models::InlineObject3Meta>,
 }
 
 impl InlineObject3 {
-    pub fn new(error: Error, status: Status, meta: models::InlineObject3Meta) -> InlineObject3 {
+    pub fn new(meta: models::InlineObject3Meta) -> InlineObject3 {
         InlineObject3 {
-            error,
-            status,
             meta: Box::new(meta),
         }
-    }
-}
-/// For successful requests, this value is always `false`.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Error {
-    #[serde(rename = "false")]
-    False,
-}
-
-impl Default for Error {
-    fn default() -> Error {
-        Self::False
-    }
-}
-/// Status code
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Status {
-    #[serde(rename = "200")]
-    Variant200,
-}
-
-impl Default for Status {
-    fn default() -> Status {
-        Self::Variant200
     }
 }
 
