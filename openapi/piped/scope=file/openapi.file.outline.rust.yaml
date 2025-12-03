@@ -5192,6 +5192,640 @@ components:
       - error
       - status
       - message
+    Role:
+      type: string
+      enum:
+      - owner
+      - editor
+      - viewer
+      description: The role of the user making the API request in relation to 
+        the file.
+    EditorType:
+      type: string
+      enum:
+      - figma
+      - figjam
+      description: The type of editor associated with this file.
+    GetFileBranchesItem:
+      type: object
+      properties:
+        key:
+          type: string
+          description: The key of the branch.
+        name:
+          type: string
+          description: The name of the branch.
+        thumbnail_url:
+          type: string
+          description: A URL to a thumbnail image of the branch.
+        last_modified:
+          type: string
+          description: The UTC ISO 8601 time at which the branch was last 
+            modified.
+          format: date-time
+      required:
+      - key
+      - name
+      - thumbnail_url
+      - last_modified
+    GetFile:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the file as it appears in the editor.
+        role:
+          $ref: '#/components/schemas/Role'
+        lastModified:
+          type: string
+          description: The UTC ISO 8601 time at which the file was last 
+            modified.
+          format: date-time
+        editorType:
+          $ref: '#/components/schemas/EditorType'
+        thumbnailUrl:
+          type: string
+          description: A URL to a thumbnail image of the file.
+        version:
+          type: string
+          description: The version number of the file. This number is 
+            incremented when a file is modified and can be used to check if the 
+            file has changed between requests.
+        document:
+          $ref: "#/components/schemas/DocumentNode"
+        components:
+          type: object
+          description: A mapping from component IDs to component metadata.
+          additionalProperties:
+            $ref: "#/components/schemas/Component"
+        componentSets:
+          type: object
+          description: A mapping from component set IDs to component set 
+            metadata.
+          additionalProperties:
+            $ref: "#/components/schemas/ComponentSet"
+        schemaVersion:
+          type: number
+          description: The version of the file schema that this file uses.
+          default: 0
+        styles:
+          type: object
+          description: A mapping from style IDs to style metadata.
+          additionalProperties:
+            $ref: "#/components/schemas/Style"
+        linkAccess:
+          type: string
+          description: The share permission level of the file link.
+        mainFileKey:
+          type: string
+          description: The key of the main file for this file. If present, this 
+            file is a component or component set.
+        branches:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetFileBranchesItem'
+          description: A list of branches for this file.
+      required:
+      - name
+      - role
+      - lastModified
+      - editorType
+      - version
+      - document
+      - components
+      - componentSets
+      - schemaVersion
+      - styles
+    GetFileNodesValue:
+      type: object
+      properties:
+        document:
+          $ref: "#/components/schemas/Node"
+        components:
+          type: object
+          description: A mapping from component IDs to component metadata.
+          additionalProperties:
+            $ref: "#/components/schemas/Component"
+        componentSets:
+          type: object
+          description: A mapping from component set IDs to component set 
+            metadata.
+          additionalProperties:
+            $ref: "#/components/schemas/ComponentSet"
+        schemaVersion:
+          type: number
+          description: The version of the file schema that this file uses.
+          default: 0
+        styles:
+          type: object
+          description: A mapping from style IDs to style metadata.
+          additionalProperties:
+            $ref: "#/components/schemas/Style"
+      required:
+      - document
+      - components
+      - componentSets
+      - schemaVersion
+      - styles
+    GetFileNodes:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the file as it appears in the editor.
+        role:
+          $ref: '#/components/schemas/Role'
+        lastModified:
+          type: string
+          description: The UTC ISO 8601 time at which the file was last 
+            modified.
+          format: date-time
+        editorType:
+          $ref: '#/components/schemas/EditorType'
+        thumbnailUrl:
+          type: string
+          description: A URL to a thumbnail image of the file.
+        version:
+          type: string
+          description: The version number of the file. This number is 
+            incremented when a file is modified and can be used to check if the 
+            file has changed between requests.
+        nodes:
+          type: object
+          description: A mapping from node IDs to node metadata.
+          additionalProperties:
+            $ref: '#/components/schemas/GetFileNodesValue'
+      required:
+      - name
+      - role
+      - lastModified
+      - editorType
+      - thumbnailUrl
+      - version
+      - nodes
+    GetImages:
+      type: object
+      properties:
+        err:
+          type: "null"
+          description: For successful requests, this value is always `null`.
+        images:
+          type: object
+          description: A map from node IDs to URLs of the rendered images.
+          additionalProperties:
+            type:
+            - string
+            - "null"
+            description: A URL to the requested image.
+            format: uri
+      required:
+      - err
+      - images
+    GetImageFillsMeta:
+      type: object
+      properties:
+        images:
+          type: object
+          description: A map of image references to URLs of the image fills.
+          additionalProperties:
+            type: string
+            description: A URL to the requested image fill.
+            format: uri
+      required:
+      - images
+    GetImageFills:
+      type: object
+      properties:
+        error:
+          type: boolean
+          description: For successful requests, this value is always `false`.
+        status:
+          type: number
+          description: Status code
+        meta:
+          $ref: '#/components/schemas/GetImageFillsMeta'
+      required:
+      - error
+      - status
+      - meta
+
+    LinkAccess:
+      type: string
+      enum:
+      - view
+      - edit
+      - org_view
+      - org_edit
+      - inherit
+      description: Access policy for users who have the link to the file.
+    GetFileMeta:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the file.
+        folder_name:
+          type: string
+          description: The name of the project containing the file.
+        last_touched_at:
+          type: string
+          description: The UTC ISO 8601 time at which the file content was last 
+            modified.
+          format: date-time
+        creator:
+          description: The user who created the file.
+          $ref: "#/components/schemas/User"
+        last_touched_by:
+          description: The user who last modified the file contents.
+          $ref: "#/components/schemas/User"
+        thumbnail_url:
+          type: string
+          description: A URL to a thumbnail image of the file.
+        editorType:
+          $ref: '#/components/schemas/EditorType'
+        role:
+          $ref: '#/components/schemas/Role'
+        link_access:
+          $ref: '#/components/schemas/LinkAccess'
+        url:
+          type: string
+          description: The URL of the file.
+        version:
+          type: string
+          description: The version number of the file. This number is 
+            incremented when a file is modified and can be used to check if the 
+            file has changed between requests.
+      required:
+      - name
+      - last_touched_at
+      - creator
+      - editorType
+
+    GetFileVersions:
+      type: object
+      properties:
+        versions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Version"
+          description: An array of versions.
+        pagination:
+          $ref: "#/components/schemas/ResponsePagination"
+      required:
+      - versions
+      - pagination
+
+    GetFileComponentsMeta:
+      type: object
+      properties:
+        components:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublishedComponent"
+      required:
+      - components
+    GetFileComponents:
+      type: object
+      properties:
+        status:
+          type: number
+          description: The status of the request.
+        error:
+          type: boolean
+          description: For successful requests, this value is always `false`.
+        meta:
+          $ref: '#/components/schemas/GetFileComponentsMeta'
+      required:
+      - status
+      - error
+      - meta
+    GetComponent:
+      type: object
+      properties:
+        status:
+          type: number
+          description: The status of the request.
+        error:
+          type: boolean
+          description: For successful requests, this value is always `false`.
+        meta:
+          $ref: "#/components/schemas/PublishedComponent"
+      required:
+      - status
+      - error
+      - meta
+
+    GetFileComponentSetsMeta:
+      type: object
+      properties:
+        component_sets:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublishedComponentSet"
+      required:
+      - component_sets
+    GetFileComponentSets:
+      type: object
+      properties:
+        status:
+          type: number
+          description: The status of the request.
+        error:
+          type: boolean
+          description: For successful requests, this value is always `false`.
+        meta:
+          $ref: '#/components/schemas/GetFileComponentSetsMeta'
+      required:
+      - status
+      - error
+      - meta
+    GetComponentSet:
+      type: object
+      properties:
+        status:
+          type: number
+          description: The status of the request.
+        error:
+          type: boolean
+          description: For successful requests, this value is always `false`.
+        meta:
+          $ref: "#/components/schemas/PublishedComponentSet"
+      required:
+      - status
+      - error
+      - meta
+    GetTeamStylesMeta:
+      type: object
+      properties:
+        styles:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublishedStyle"
+        cursor:
+          $ref: "#/components/schemas/ResponseCursor"
+      required:
+      - styles
+    GetTeamStyles:
+      type: object
+      properties:
+        status:
+          type: number
+          description: The status of the request.
+        error:
+          type: boolean
+          description: For successful requests, this value is always `false`.
+        meta:
+          $ref: '#/components/schemas/GetTeamStylesMeta'
+      required:
+      - status
+      - error
+      - meta
+    GetFileStylesMeta:
+      type: object
+      properties:
+        styles:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublishedStyle"
+      required:
+      - styles
+    GetFileStyles:
+      type: object
+      properties:
+        status:
+          type: number
+          description: The status of the request.
+        error:
+          type: boolean
+          description: For successful requests, this value is always `false`.
+        meta:
+          $ref: '#/components/schemas/GetFileStylesMeta'
+      required:
+      - status
+      - error
+      - meta
+    GetStyle:
+      type: object
+      properties:
+        status:
+          type: number
+          description: The status of the request.
+        error:
+          type: boolean
+          description: For successful requests, this value is always `false`.
+        meta:
+          $ref: "#/components/schemas/PublishedStyle"
+      required:
+      - status
+      - error
+      - meta
+
+    GetLocalVariablesMeta:
+      type: object
+      properties:
+        variables:
+          type: object
+          description: A map of variable ids to variables
+          additionalProperties:
+            $ref: "#/components/schemas/LocalVariable"
+        variableCollections:
+          type: object
+          description: A map of variable collection ids to variable collections
+          additionalProperties:
+            $ref: "#/components/schemas/LocalVariableCollection"
+      required:
+      - variables
+      - variableCollections
+    GetLocalVariables:
+      type: object
+      properties:
+        status:
+          type: number
+          description: The response status code.
+        error:
+          type: boolean
+          description: For successful requests, this value is always `false`.
+        meta:
+          $ref: '#/components/schemas/GetLocalVariablesMeta'
+      required:
+      - status
+      - error
+      - meta
+    GetPublishedVariablesMeta:
+      type: object
+      properties:
+        variables:
+          type: object
+          description: A map of variable ids to variables
+          additionalProperties:
+            $ref: "#/components/schemas/PublishedVariable"
+        variableCollections:
+          type: object
+          description: A map of variable collection ids to variable collections
+          additionalProperties:
+            $ref: "#/components/schemas/PublishedVariableCollection"
+      required:
+      - variables
+      - variableCollections
+    GetPublishedVariables:
+      type: object
+      properties:
+        status:
+          type: number
+          description: The response status code.
+        error:
+          type: boolean
+          description: For successful requests, this value is always `false`.
+        meta:
+          $ref: '#/components/schemas/GetPublishedVariablesMeta'
+      required:
+      - status
+      - error
+      - meta
+    PostVariablesMeta:
+      type: object
+      properties:
+        tempIdToRealId:
+          type: object
+          description: A map of temporary ids in the request to the real ids of 
+            the newly created objects
+          additionalProperties:
+            type: string
+      required:
+      - tempIdToRealId
+    PostVariables:
+      type: object
+      properties:
+        status:
+          type: number
+          description: The response status code.
+        error:
+          type: boolean
+          description: For successful requests, this value is always `false`.
+        meta:
+          $ref: '#/components/schemas/PostVariablesMeta'
+      required:
+      - status
+      - error
+      - meta
+
+    BadRequestErrorResponseWithErrMessage:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponsePayloadWithErrMessage"
+      - type: object
+        properties:
+          status:
+            type: number
+            description: Status code
+        required:
+        - status
+    BadRequestErrorResponseWithErrorBoolean:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponsePayloadWithErrorBoolean"
+      - type: object
+        properties:
+          status:
+            type: number
+            description: Status code
+        required:
+        - status
+    UnauthorizedErrorResponseWithErrorBoolean:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponsePayloadWithErrorBoolean"
+      - type: object
+        properties:
+          status:
+            type: number
+            description: Status code
+        required:
+        - status
+    ForbiddenErrorResponseWithErrMessage:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponsePayloadWithErrMessage"
+      - type: object
+        properties:
+          status:
+            type: number
+            description: Status code
+        required:
+        - status
+    ForbiddenErrorResponseWithErrorBoolean:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponsePayloadWithErrorBoolean"
+      - type: object
+        properties:
+          status:
+            type: number
+            description: Status code
+        required:
+        - status
+    NotFoundErrorResponseWithErrMessage:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponsePayloadWithErrMessage"
+      - type: object
+        properties:
+          status:
+            type: number
+            description: Status code
+        required:
+        - status
+    NotFoundErrorResponseWithErrorBoolean:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponsePayloadWithErrorBoolean"
+      - type: object
+        properties:
+          status:
+            type: number
+            description: Status code
+        required:
+        - status
+    TooManyRequestsErrorResponseWithErrMessage:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponsePayloadWithErrMessage"
+      - type: object
+        properties:
+          status:
+            type: number
+            description: Status code
+        required:
+        - status
+    TooManyRequestsErrorResponseWithErrorBoolean:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponsePayloadWithErrorBoolean"
+      - type: object
+        properties:
+          status:
+            type: number
+            description: Status code
+        required:
+        - status
+    InternalServerErrorResponseWithErrMessage:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponsePayloadWithErrMessage"
+      - type: object
+        properties:
+          status:
+            type: number
+            description: Status code
+        required:
+        - status
+    InternalServerErrorResponseWithErrorBoolean:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponsePayloadWithErrorBoolean"
+      - type: object
+        properties:
+          status:
+            type: number
+            description: Status code
+        required:
+        - status
+    GetImageFillsResponseBody:
+      type: object
+      properties:
+        meta:
+          $ref: "#/components/schemas/GetImageFillsMeta"
+      required:
+      - meta
     LayerBlurEffect:
       type: object
       properties:
@@ -5225,629 +5859,102 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of the file as it appears in the editor.
-              role:
-                type: string
-                enum:
-                - owner
-                - editor
-                - viewer
-                description: The role of the user making the API request in 
-                  relation to the file.
-              lastModified:
-                type: string
-                format: date-time
-                description: The UTC ISO 8601 time at which the file was last 
-                  modified.
-              editorType:
-                type: string
-                enum:
-                - figma
-                - figjam
-                description: The type of editor associated with this file.
-              thumbnailUrl:
-                type: string
-                description: A URL to a thumbnail image of the file.
-              version:
-                type: string
-                description: The version number of the file. This number is 
-                  incremented when a file is modified and can be used to check 
-                  if the file has changed between requests.
-              document:
-                $ref: "#/components/schemas/DocumentNode"
-              components:
-                type: object
-                additionalProperties:
-                  $ref: "#/components/schemas/Component"
-                description: A mapping from component IDs to component metadata.
-              componentSets:
-                type: object
-                additionalProperties:
-                  $ref: "#/components/schemas/ComponentSet"
-                description: A mapping from component set IDs to component set 
-                  metadata.
-              schemaVersion:
-                type: number
-                description: The version of the file schema that this file uses.
-                default: 0
-              styles:
-                type: object
-                additionalProperties:
-                  $ref: "#/components/schemas/Style"
-                description: A mapping from style IDs to style metadata.
-              linkAccess:
-                type: string
-                description: The share permission level of the file link.
-              mainFileKey:
-                type: string
-                description: The key of the main file for this file. If present,
-                  this file is a component or component set.
-              branches:
-                type: array
-                description: A list of branches for this file.
-                items:
-                  type: object
-                  properties:
-                    key:
-                      type: string
-                      description: The key of the branch.
-                    name:
-                      type: string
-                      description: The name of the branch.
-                    thumbnail_url:
-                      type: string
-                      description: A URL to a thumbnail image of the branch.
-                    last_modified:
-                      type: string
-                      format: date-time
-                      description: The UTC ISO 8601 time at which the branch was
-                        last modified.
-                  required:
-                  - key
-                  - name
-                  - thumbnail_url
-                  - last_modified
-            required:
-            - name
-            - role
-            - lastModified
-            - editorType
-            - version
-            - document
-            - components
-            - componentSets
-            - schemaVersion
-            - styles
+            $ref: '#/components/schemas/GetFile'
     GetFileNodesResponse:
       description: Response from the GET /v1/files/{file_key}/nodes endpoint.
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of the file as it appears in the editor.
-              role:
-                type: string
-                enum:
-                - owner
-                - editor
-                - viewer
-                description: The role of the user making the API request in 
-                  relation to the file.
-              lastModified:
-                type: string
-                format: date-time
-                description: The UTC ISO 8601 time at which the file was last 
-                  modified.
-              editorType:
-                type: string
-                enum:
-                - figma
-                - figjam
-                description: The type of editor associated with this file.
-              thumbnailUrl:
-                type: string
-                description: A URL to a thumbnail image of the file.
-              version:
-                type: string
-                description: The version number of the file. This number is 
-                  incremented when a file is modified and can be used to check 
-                  if the file has changed between requests.
-              nodes:
-                type: object
-                description: A mapping from node IDs to node metadata.
-                additionalProperties:
-                  type: object
-                  properties:
-                    document:
-                      $ref: "#/components/schemas/Node"
-                    components:
-                      type: object
-                      additionalProperties:
-                        $ref: "#/components/schemas/Component"
-                      description: A mapping from component IDs to component 
-                        metadata.
-                    componentSets:
-                      type: object
-                      additionalProperties:
-                        $ref: "#/components/schemas/ComponentSet"
-                      description: A mapping from component set IDs to component
-                        set metadata.
-                    schemaVersion:
-                      type: number
-                      description: The version of the file schema that this file
-                        uses.
-                      default: 0
-                    styles:
-                      type: object
-                      additionalProperties:
-                        $ref: "#/components/schemas/Style"
-                      description: A mapping from style IDs to style metadata.
-                  required:
-                  - document
-                  - components
-                  - componentSets
-                  - schemaVersion
-                  - styles
-            required:
-            - name
-            - role
-            - lastModified
-            - editorType
-            - thumbnailUrl
-            - version
-            - nodes
+            $ref: '#/components/schemas/GetFileNodes'
     GetImagesResponse:
       description: Response from the GET /v1/images/{file_key} endpoint.
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              err:
-                type: "null"
-                description: For successful requests, this value is always 
-                  `null`.
-              images:
-                type: object
-                description: A map from node IDs to URLs of the rendered images.
-                additionalProperties:
-                  type:
-                  - string
-                  - "null"
-                  description: A URL to the requested image.
-                  format: uri
-            required:
-            - err
-            - images
+            $ref: '#/components/schemas/GetImages'
     GetImageFillsResponse:
       description: Response from the GET /v1/files/{file_key}/images endpoint.
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              meta:
-                type: object
-                properties:
-                  images:
-                    type: object
-                    description: A map of image references to URLs of the image 
-                      fills.
-                    additionalProperties:
-                      type: string
-                      format: uri
-                required:
-                - images
-            required:
-            - meta
+            $ref: "#/components/schemas/GetImageFillsResponseBody"
     GetFileMetaResponse:
       description: Response from the GET /v1/files/{file_key}/meta endpoint.
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of the file.
-              folder_name:
-                type: string
-                description: The name of the project containing the file.
-              last_touched_at:
-                type: string
-                format: date-time
-                description: The UTC ISO 8601 time at which the file content was
-                  last modified.
-              creator:
-                description: The user who created the file.
-                $ref: "#/components/schemas/User"
-              last_touched_by:
-                description: The user who last modified the file contents.
-                $ref: "#/components/schemas/User"
-              thumbnail_url:
-                type: string
-                description: A URL to a thumbnail image of the file.
-              editorType:
-                type: string
-                enum:
-                - figma
-                - figjam
-                - slides
-                description: The type of editor associated with this file.
-              role:
-                type: string
-                enum:
-                - owner
-                - editor
-                - viewer
-                description: The role of the user making the API request in 
-                  relation to the file.
-              link_access:
-                type: string
-                enum:
-                - view
-                - edit
-                - org_view
-                - org_edit
-                - inherit
-                description: Access policy for users who have the link to the 
-                  file.
-              url:
-                type: string
-                description: The URL of the file.
-              version:
-                type: string
-                description: The version number of the file. This number is 
-                  incremented when a file is modified and can be used to check 
-                  if the file has changed between requests.
-            required:
-            - name
-            - last_touched_at
-            - creator
-            - editorType
-
+            $ref: '#/components/schemas/GetFileMeta'
     GetFileVersionsResponse:
       description: Response from the GET /v1/files/{file_key}/versions endpoint.
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              versions:
-                type: array
-                description: An array of versions.
-                items:
-                  $ref: "#/components/schemas/Version"
-              pagination:
-                $ref: "#/components/schemas/ResponsePagination"
-            required:
-            - versions
-            - pagination
-
+            $ref: '#/components/schemas/GetFileVersions'
     GetFileComponentsResponse:
       description: Response from the GET /v1/files/{file_key}/components 
         endpoint.
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              status:
-                type: number
-                description: The status of the request.
-                enum:
-                - 200
-              error:
-                type: boolean
-                description: For successful requests, this value is always 
-                  `false`.
-                enum:
-                - false
-              meta:
-                type: object
-                properties:
-                  components:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/PublishedComponent"
-                required:
-                - components
-            required:
-            - status
-            - error
-            - meta
+            $ref: '#/components/schemas/GetFileComponents'
     GetComponentResponse:
       description: Response from the GET /v1/components/{key} endpoint.
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              status:
-                type: number
-                description: The status of the request.
-                enum:
-                - 200
-              error:
-                type: boolean
-                description: For successful requests, this value is always 
-                  `false`.
-                enum:
-                - false
-              meta:
-                $ref: "#/components/schemas/PublishedComponent"
-            required:
-            - status
-            - error
-            - meta
-
+            $ref: '#/components/schemas/GetComponent'
     GetFileComponentSetsResponse:
       description: Response from the GET /v1/files/{file_key}/component_sets 
         endpoint.
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              status:
-                type: number
-                description: The status of the request.
-                enum:
-                - 200
-              error:
-                type: boolean
-                description: For successful requests, this value is always 
-                  `false`.
-                enum:
-                - false
-              meta:
-                type: object
-                properties:
-                  component_sets:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/PublishedComponentSet"
-                required:
-                - component_sets
-            required:
-            - status
-            - error
-            - meta
+            $ref: '#/components/schemas/GetFileComponentSets'
     GetComponentSetResponse:
       description: Response from the GET /v1/component_sets/{key} endpoint.
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              status:
-                type: number
-                description: The status of the request.
-                enum:
-                - 200
-              error:
-                type: boolean
-                description: For successful requests, this value is always 
-                  `false`.
-                enum:
-                - false
-              meta:
-                $ref: "#/components/schemas/PublishedComponentSet"
-            required:
-            - status
-            - error
-            - meta
+            $ref: '#/components/schemas/GetComponentSet'
     GetTeamStylesResponse:
       description: Response from the GET /v1/teams/{team_id}/styles endpoint.
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              status:
-                type: number
-                description: The status of the request.
-                enum:
-                - 200
-              error:
-                type: boolean
-                description: For successful requests, this value is always 
-                  `false`.
-                enum:
-                - false
-              meta:
-                type: object
-                properties:
-                  styles:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/PublishedStyle"
-                  cursor:
-                    $ref: "#/components/schemas/ResponseCursor"
-                required:
-                - styles
-            required:
-            - status
-            - error
-            - meta
+            $ref: '#/components/schemas/GetTeamStyles'
     GetFileStylesResponse:
       description: Response from the GET /v1/files/{file_key}/styles endpoint.
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              status:
-                type: number
-                description: The status of the request.
-                enum:
-                - 200
-              error:
-                type: boolean
-                description: For successful requests, this value is always 
-                  `false`.
-                enum:
-                - false
-              meta:
-                type: object
-                properties:
-                  styles:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/PublishedStyle"
-                required:
-                - styles
-            required:
-            - status
-            - error
-            - meta
+            $ref: '#/components/schemas/GetFileStyles'
     GetStyleResponse:
       description: Response from the GET /v1/styles/{key} endpoint.
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              status:
-                type: number
-                description: The status of the request.
-                enum:
-                - 200
-              error:
-                type: boolean
-                description: For successful requests, this value is always 
-                  `false`.
-                enum:
-                - false
-              meta:
-                $ref: "#/components/schemas/PublishedStyle"
-            required:
-            - status
-            - error
-            - meta
-
+            $ref: '#/components/schemas/GetStyle'
     GetLocalVariablesResponse:
       description: Response from the GET /v1/files/{file_key}/variables/local 
         endpoint.
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              status:
-                type: number
-                enum:
-                - 200
-                description: The response status code.
-              error:
-                type: boolean
-                enum:
-                - false
-                description: For successful requests, this value is always 
-                  `false`.
-              meta:
-                type: object
-                properties:
-                  variables:
-                    type: object
-                    description: A map of variable ids to variables
-                    additionalProperties:
-                      $ref: "#/components/schemas/LocalVariable"
-                  variableCollections:
-                    type: object
-                    description: A map of variable collection ids to variable 
-                      collections
-                    additionalProperties:
-                      $ref: "#/components/schemas/LocalVariableCollection"
-                required:
-                - variables
-                - variableCollections
-            required:
-            - status
-            - error
-            - meta
+            $ref: '#/components/schemas/GetLocalVariables'
     GetPublishedVariablesResponse:
       description: Response from the GET 
         /v1/files/{file_key}/variables/published endpoint.
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              status:
-                type: number
-                enum:
-                - 200
-                description: The response status code.
-              error:
-                type: boolean
-                enum:
-                - false
-                description: For successful requests, this value is always 
-                  `false`.
-              meta:
-                type: object
-                properties:
-                  variables:
-                    type: object
-                    description: A map of variable ids to variables
-                    additionalProperties:
-                      $ref: "#/components/schemas/PublishedVariable"
-                  variableCollections:
-                    type: object
-                    description: A map of variable collection ids to variable 
-                      collections
-                    additionalProperties:
-                      $ref: "#/components/schemas/PublishedVariableCollection"
-                required:
-                - variables
-                - variableCollections
-            required:
-            - status
-            - error
-            - meta
+            $ref: '#/components/schemas/GetPublishedVariables'
     PostVariablesResponse:
       description: Response from the POST /v1/files/{file_key}/variables 
         endpoint.
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              status:
-                type: number
-                enum:
-                - 200
-                description: The response status code.
-              error:
-                type: boolean
-                enum:
-                - false
-                description: For successful requests, this value is always 
-                  `false`.
-              meta:
-                type: object
-                properties:
-                  tempIdToRealId:
-                    type: object
-                    description: A map of temporary ids in the request to the 
-                      real ids of the newly created objects
-                    additionalProperties:
-                      type: string
-                required:
-                - tempIdToRealId
-            required:
-            - status
-            - error
-            - meta
-
+            $ref: '#/components/schemas/PostVariables'
     BadRequestErrorResponseWithErrMessage:
       description: Bad request. Parameters are invalid or malformed. Please 
         check the input formats. This error can also happen if the requested 
@@ -5856,17 +5963,7 @@ components:
       content:
         application/json:
           schema:
-            allOf:
-            - $ref: "#/components/schemas/ErrorResponsePayloadWithErrMessage"
-            - type: object
-              properties:
-                status:
-                  type: number
-                  description: Status code
-                  enum:
-                  - 400
-              required:
-              - status
+            $ref: '#/components/schemas/BadRequestErrorResponseWithErrMessage'
     BadRequestErrorResponseWithErrorBoolean:
       description: Bad request. Parameters are invalid or malformed. Please 
         check the input formats. This error can also happen if the requested 
@@ -5875,33 +5972,13 @@ components:
       content:
         application/json:
           schema:
-            allOf:
-            - $ref: "#/components/schemas/ErrorResponsePayloadWithErrorBoolean"
-            - type: object
-              properties:
-                status:
-                  type: number
-                  description: Status code
-                  enum:
-                  - 400
-              required:
-              - status
+            $ref: '#/components/schemas/BadRequestErrorResponseWithErrorBoolean'
     UnauthorizedErrorResponseWithErrorBoolean:
       description: Token is missing or incorrect.
       content:
         application/json:
           schema:
-            allOf:
-            - $ref: "#/components/schemas/ErrorResponsePayloadWithErrorBoolean"
-            - type: object
-              properties:
-                status:
-                  type: number
-                  description: Status code
-                  enum:
-                  - 401
-              required:
-              - status
+            $ref: '#/components/schemas/UnauthorizedErrorResponseWithErrorBoolean'
     ForbiddenErrorResponseWithErrMessage:
       description: The request was valid, but the server is refusing action. The
         user might not have the necessary permissions for a resource, or may 
@@ -5909,17 +5986,7 @@ components:
       content:
         application/json:
           schema:
-            allOf:
-            - $ref: "#/components/schemas/ErrorResponsePayloadWithErrMessage"
-            - type: object
-              properties:
-                status:
-                  type: number
-                  description: Status code
-                  enum:
-                  - 403
-              required:
-              - status
+            $ref: '#/components/schemas/ForbiddenErrorResponseWithErrMessage'
     ForbiddenErrorResponseWithErrorBoolean:
       description: The request was valid, but the server is refusing action. The
         user might not have the necessary permissions for a resource, or may 
@@ -5927,49 +5994,19 @@ components:
       content:
         application/json:
           schema:
-            allOf:
-            - $ref: "#/components/schemas/ErrorResponsePayloadWithErrorBoolean"
-            - type: object
-              properties:
-                status:
-                  type: number
-                  description: Status code
-                  enum:
-                  - 403
-              required:
-              - status
+            $ref: '#/components/schemas/ForbiddenErrorResponseWithErrorBoolean'
     NotFoundErrorResponseWithErrMessage:
       description: The requested file or resource was not found.
       content:
         application/json:
           schema:
-            allOf:
-            - $ref: "#/components/schemas/ErrorResponsePayloadWithErrMessage"
-            - type: object
-              properties:
-                status:
-                  type: number
-                  description: Status code
-                  enum:
-                  - 404
-              required:
-              - status
+            $ref: '#/components/schemas/NotFoundErrorResponseWithErrMessage'
     NotFoundErrorResponseWithErrorBoolean:
       description: The requested file or resource was not found.
       content:
         application/json:
           schema:
-            allOf:
-            - $ref: "#/components/schemas/ErrorResponsePayloadWithErrorBoolean"
-            - type: object
-              properties:
-                status:
-                  type: number
-                  description: Status code
-                  enum:
-                  - 404
-              required:
-              - status
+            $ref: '#/components/schemas/NotFoundErrorResponseWithErrorBoolean'
     TooManyRequestsErrorResponseWithErrMessage:
       description: In some cases API requests may be throttled or rate limited. 
         Please wait a while before attempting the request again (typically a 
@@ -5977,17 +6014,7 @@ components:
       content:
         application/json:
           schema:
-            allOf:
-            - $ref: "#/components/schemas/ErrorResponsePayloadWithErrMessage"
-            - type: object
-              properties:
-                status:
-                  type: number
-                  description: Status code
-                  enum:
-                  - 429
-              required:
-              - status
+            $ref: '#/components/schemas/TooManyRequestsErrorResponseWithErrMessage'
     TooManyRequestsErrorResponseWithErrorBoolean:
       description: In some cases API requests may be throttled or rate limited. 
         Please wait a while before attempting the request again (typically a 
@@ -5995,46 +6022,16 @@ components:
       content:
         application/json:
           schema:
-            allOf:
-            - $ref: "#/components/schemas/ErrorResponsePayloadWithErrorBoolean"
-            - type: object
-              properties:
-                status:
-                  type: number
-                  description: Status code
-                  enum:
-                  - 429
-              required:
-              - status
+            $ref: '#/components/schemas/TooManyRequestsErrorResponseWithErrorBoolean'
     InternalServerErrorResponseWithErrMessage:
       description: An internal server error occurred.
       content:
         application/json:
           schema:
-            allOf:
-            - $ref: "#/components/schemas/ErrorResponsePayloadWithErrMessage"
-            - type: object
-              properties:
-                status:
-                  type: number
-                  description: Status code
-                  enum:
-                  - 500
-              required:
-              - status
+            $ref: '#/components/schemas/InternalServerErrorResponseWithErrMessage'
     InternalServerErrorResponseWithErrorBoolean:
       description: An internal server error occurred.
       content:
         application/json:
           schema:
-            allOf:
-            - $ref: "#/components/schemas/ErrorResponsePayloadWithErrorBoolean"
-            - type: object
-              properties:
-                status:
-                  type: number
-                  description: Status code
-                  enum:
-                  - 500
-              required:
-              - status
+            $ref: '#/components/schemas/InternalServerErrorResponseWithErrorBoolean'

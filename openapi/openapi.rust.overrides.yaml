@@ -1,3 +1,24 @@
+# ============================================================================
+# MANUALLY AUTHORED FILE - DO NOT AUTO-GENERATE
+# ============================================================================
+#
+# This file contains manual schema overrides for Rust/Serde compatibility.
+# It is manually authored and maintained by developers to fix specific issues
+# that cannot be handled automatically by the pipeline scripts.
+#
+# When to modify this file:
+#   - When a schema causes Rust deserialization failures
+#   - When a schema needs special handling for Serde compatibility
+#   - When discriminator mappings need to be corrected
+#   - When enum values need to be added or corrected
+#
+# This file is processed by pipe_rust_rm_type.py during the pipeline.
+# Changes to this file will affect the generated Rust code.
+#
+# Author: Universe (universe@grida.co)
+# Last updated: 2025-06-08
+# ============================================================================
+
 components:
   responses:
     GetImageFillsResponse:
@@ -5,22 +26,15 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              meta:
-                type: object
-                properties:
-                  images:
-                    type: object
-                    description: A map of image references to URLs of the image fills.
-                    additionalProperties:
-                      type: string
-                      format: uri
-                required:
-                  - images
-            required:
-              - meta
+            $ref: "#/components/schemas/GetImageFillsResponseBody"
   schemas:
+    GetImageFillsResponseBody:
+      type: object
+      properties:
+        meta:
+          $ref: "#/components/schemas/GetImageFillsMeta"
+      required:
+        - meta
     HasLayoutTrait:
       properties:
         layoutGrow:
