@@ -11,7 +11,7 @@ Method | HTTP request | Description
 
 ## get_component_set
 
-> models::InlineObject9 get_component_set(key)
+> models::GetComponentSet get_component_set(key)
 Get component set
 
 Get metadata on a published component set by key.
@@ -25,7 +25,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**models::InlineObject9**](inline_object_9.md)
+[**models::GetComponentSet**](GetComponentSet.md)
 
 ### Authorization
 
@@ -41,7 +41,7 @@ Name | Type | Description  | Required | Notes
 
 ## get_file_component_sets
 
-> models::InlineObject8 get_file_component_sets(file_key)
+> models::GetFileComponentSets get_file_component_sets(file_key)
 Get file component sets
 
 Get a list of published component sets within a file library.
@@ -55,7 +55,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**models::InlineObject8**](inline_object_8.md)
+[**models::GetFileComponentSets**](GetFileComponentSets.md)
 
 ### Authorization
 

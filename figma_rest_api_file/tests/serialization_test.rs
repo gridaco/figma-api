@@ -1,4 +1,5 @@
-use figma_api::models::InlineObject;
+use figma_api::models::GetFile;
+use figma_api::models::GetImageFillsResponseBody;
 use figma_api::models::Node;
 use serde_json;
 use std::fs;
@@ -13,8 +14,8 @@ fn test_deserialize_file_response_primitive() {
     // Read JSON from file
     let json = read_json_file("../examples/__primitive__.json");
 
-    // Try to deserialize the JSON into our model
-    let result = serde_json::from_str::<InlineObject>(&json);
+    // Try to deserialize the JSON into our model (file response)
+    let result = serde_json::from_str::<GetFile>(&json);
     assert!(
         result.is_ok(),
         "Failed to deserialize JSON: {:?}",
@@ -45,8 +46,8 @@ fn test_deserialize_file_response_full() {
     // First attempt full deserialization
     let jd = &mut serde_json::Deserializer::from_str(&json);
 
-    // let full_result = serde_json::from_str::<InlineObject>(&json);
-    let result: Result<InlineObject, _> = serde_path_to_error::deserialize(jd);
+    // Deserialize the full file response
+    let result: Result<GetFile, _> = serde_path_to_error::deserialize(jd);
 
     match result {
         Ok(_) => {}

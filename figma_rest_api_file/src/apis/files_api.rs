@@ -19,11 +19,11 @@ use super::{Error, configuration, ContentType};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetFileError {
-    Status400(models::InlineObject16),
-    Status403(models::InlineObject19),
-    Status404(models::InlineObject21),
-    Status429(models::InlineObject23),
-    Status500(models::InlineObject25),
+    Status400(models::BadRequestErrorResponseWithErrMessage),
+    Status403(models::ForbiddenErrorResponseWithErrMessage),
+    Status404(models::NotFoundErrorResponseWithErrMessage),
+    Status429(models::TooManyRequestsErrorResponseWithErrMessage),
+    Status500(models::InternalServerErrorResponseWithErrMessage),
     UnknownValue(serde_json::Value),
 }
 
@@ -31,11 +31,11 @@ pub enum GetFileError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetFileMetaError {
-    Status400(models::InlineObject16),
-    Status403(models::InlineObject19),
-    Status404(models::InlineObject21),
-    Status429(models::InlineObject23),
-    Status500(models::InlineObject25),
+    Status400(models::BadRequestErrorResponseWithErrMessage),
+    Status403(models::ForbiddenErrorResponseWithErrMessage),
+    Status404(models::NotFoundErrorResponseWithErrMessage),
+    Status429(models::TooManyRequestsErrorResponseWithErrMessage),
+    Status500(models::InternalServerErrorResponseWithErrMessage),
     UnknownValue(serde_json::Value),
 }
 
@@ -43,11 +43,11 @@ pub enum GetFileMetaError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetFileNodesError {
-    Status400(models::InlineObject16),
-    Status403(models::InlineObject19),
-    Status404(models::InlineObject21),
-    Status429(models::InlineObject23),
-    Status500(models::InlineObject25),
+    Status400(models::BadRequestErrorResponseWithErrMessage),
+    Status403(models::ForbiddenErrorResponseWithErrMessage),
+    Status404(models::NotFoundErrorResponseWithErrMessage),
+    Status429(models::TooManyRequestsErrorResponseWithErrMessage),
+    Status500(models::InternalServerErrorResponseWithErrMessage),
     UnknownValue(serde_json::Value),
 }
 
@@ -55,11 +55,11 @@ pub enum GetFileNodesError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetImageFillsError {
-    Status400(models::InlineObject16),
-    Status403(models::InlineObject19),
-    Status404(models::InlineObject21),
-    Status429(models::InlineObject23),
-    Status500(models::InlineObject25),
+    Status400(models::BadRequestErrorResponseWithErrMessage),
+    Status403(models::ForbiddenErrorResponseWithErrMessage),
+    Status404(models::NotFoundErrorResponseWithErrMessage),
+    Status429(models::TooManyRequestsErrorResponseWithErrMessage),
+    Status500(models::InternalServerErrorResponseWithErrMessage),
     UnknownValue(serde_json::Value),
 }
 
@@ -67,17 +67,17 @@ pub enum GetImageFillsError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetImagesError {
-    Status400(models::InlineObject16),
-    Status403(models::InlineObject19),
-    Status404(models::InlineObject21),
-    Status429(models::InlineObject23),
-    Status500(models::InlineObject25),
+    Status400(models::BadRequestErrorResponseWithErrMessage),
+    Status403(models::ForbiddenErrorResponseWithErrMessage),
+    Status404(models::NotFoundErrorResponseWithErrMessage),
+    Status429(models::TooManyRequestsErrorResponseWithErrMessage),
+    Status500(models::InternalServerErrorResponseWithErrMessage),
     UnknownValue(serde_json::Value),
 }
 
 
 /// Returns the document identified by `file_key` as a JSON object. The file key can be parsed from any Figma file url: `https://www.figma.com/file/{file_key}/{title}`.  The `document` property contains a node of type `DOCUMENT`.  The `components` property contains a mapping from node IDs to component metadata. This is to help you determine which components each instance comes from.
-pub async fn get_file(configuration: &configuration::Configuration, file_key: &str, version: Option<&str>, ids: Option<&str>, depth: Option<f64>, geometry: Option<&str>, plugin_data: Option<&str>, branch_data: Option<bool>) -> Result<models::InlineObject, Error<GetFileError>> {
+pub async fn get_file(configuration: &configuration::Configuration, file_key: &str, version: Option<&str>, ids: Option<&str>, depth: Option<f64>, geometry: Option<&str>, plugin_data: Option<&str>, branch_data: Option<bool>) -> Result<models::GetFile, Error<GetFileError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_file_key = file_key;
     let p_version = version;
@@ -138,8 +138,8 @@ pub async fn get_file(configuration: &configuration::Configuration, file_key: &s
         let content = resp.text().await?;
         match content_type {
             ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::InlineObject`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::InlineObject`")))),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::GetFile`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::GetFile`")))),
         }
     } else {
         let content = resp.text().await?;
@@ -149,7 +149,7 @@ pub async fn get_file(configuration: &configuration::Configuration, file_key: &s
 }
 
 /// Get file metadata
-pub async fn get_file_meta(configuration: &configuration::Configuration, file_key: &str) -> Result<models::InlineObject4, Error<GetFileMetaError>> {
+pub async fn get_file_meta(configuration: &configuration::Configuration, file_key: &str) -> Result<models::GetFileMeta, Error<GetFileMetaError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_file_key = file_key;
 
@@ -186,8 +186,8 @@ pub async fn get_file_meta(configuration: &configuration::Configuration, file_ke
         let content = resp.text().await?;
         match content_type {
             ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::InlineObject4`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::InlineObject4`")))),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::GetFileMeta`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::GetFileMeta`")))),
         }
     } else {
         let content = resp.text().await?;
@@ -197,7 +197,7 @@ pub async fn get_file_meta(configuration: &configuration::Configuration, file_ke
 }
 
 /// Returns the nodes referenced to by `ids` as a JSON object. The nodes are retrieved from the Figma file referenced to by `file_key`.  The node ID and file key can be parsed from any Figma node url: `https://www.figma.com/file/{file_key}/{title}?node-id={id}`  The `name`, `lastModified`, `thumbnailUrl`, `editorType`, and `version` attributes are all metadata of the specified file.  The `linkAccess` field describes the file link share permission level. There are 5 types of permissions a shared link can have: `\"inherit\"`, `\"view\"`, `\"edit\"`, `\"org_view\"`, and `\"org_edit\"`. `\"inherit\"` is the default permission applied to files created in a team project, and will inherit the project's permissions. `\"org_view\"` and `\"org_edit\"` restrict the link to org users.  The `document` attribute contains a Node of type `DOCUMENT`.  The `components` key contains a mapping from node IDs to component metadata. This is to help you determine which components each instance comes from.  By default, no vector data is returned. To return vector data, pass the geometry=paths parameter to the endpoint. Each node can also inherit properties from applicable styles. The styles key contains a mapping from style IDs to style metadata.  Important: the nodes map may contain values that are `null`. This may be due to the node id not existing within the specified file.
-pub async fn get_file_nodes(configuration: &configuration::Configuration, file_key: &str, ids: &str, version: Option<&str>, depth: Option<f64>, geometry: Option<&str>, plugin_data: Option<&str>) -> Result<models::InlineObject1, Error<GetFileNodesError>> {
+pub async fn get_file_nodes(configuration: &configuration::Configuration, file_key: &str, ids: &str, version: Option<&str>, depth: Option<f64>, geometry: Option<&str>, plugin_data: Option<&str>) -> Result<models::GetFileNodes, Error<GetFileNodesError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_file_key = file_key;
     let p_ids = ids;
@@ -252,8 +252,8 @@ pub async fn get_file_nodes(configuration: &configuration::Configuration, file_k
         let content = resp.text().await?;
         match content_type {
             ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::InlineObject1`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::InlineObject1`")))),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::GetFileNodes`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::GetFileNodes`")))),
         }
     } else {
         let content = resp.text().await?;
@@ -263,7 +263,7 @@ pub async fn get_file_nodes(configuration: &configuration::Configuration, file_k
 }
 
 /// Returns download links for all images present in image fills in a document. Image fills are how Figma represents any user supplied images. When you drag an image into Figma, we create a rectangle with a single fill that represents the image, and the user is able to transform the rectangle (and properties on the fill) as they wish.  This endpoint returns a mapping from image references to the URLs at which the images may be download. Image URLs will expire after no more than 14 days. Image references are located in the output of the GET files endpoint under the `imageRef` attribute in a `Paint`.
-pub async fn get_image_fills(configuration: &configuration::Configuration, file_key: &str) -> Result<models::InlineObject3, Error<GetImageFillsError>> {
+pub async fn get_image_fills(configuration: &configuration::Configuration, file_key: &str) -> Result<models::GetImageFillsResponseBody, Error<GetImageFillsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_file_key = file_key;
 
@@ -300,8 +300,8 @@ pub async fn get_image_fills(configuration: &configuration::Configuration, file_
         let content = resp.text().await?;
         match content_type {
             ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::InlineObject3`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::InlineObject3`")))),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::GetImageFillsResponseBody`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::GetImageFillsResponseBody`")))),
         }
     } else {
         let content = resp.text().await?;
@@ -311,7 +311,7 @@ pub async fn get_image_fills(configuration: &configuration::Configuration, file_
 }
 
 /// Renders images from a file.  If no error occurs, `\"images\"` will be populated with a map from node IDs to URLs of the rendered images, and `\"status\"` will be omitted. The image assets will expire after 30 days. Images up to 32 megapixels can be exported. Any images that are larger will be scaled down.  Important: the image map may contain values that are `null`. This indicates that rendering of that specific node has failed. This may be due to the node id not existing, or other reasons such has the node having no renderable components. It is guaranteed that any node that was requested for rendering will be represented in this map whether or not the render succeeded.  To render multiple images from the same file, use the `ids` query parameter to specify multiple node ids.  ``` GET /v1/images/:key?ids=1:2,1:3,1:4 ``` 
-pub async fn get_images(configuration: &configuration::Configuration, file_key: &str, ids: &str, version: Option<&str>, scale: Option<f64>, format: Option<&str>, svg_outline_text: Option<bool>, svg_include_id: Option<bool>, svg_include_node_id: Option<bool>, svg_simplify_stroke: Option<bool>, contents_only: Option<bool>, use_absolute_bounds: Option<bool>) -> Result<models::InlineObject2, Error<GetImagesError>> {
+pub async fn get_images(configuration: &configuration::Configuration, file_key: &str, ids: &str, version: Option<&str>, scale: Option<f64>, format: Option<&str>, svg_outline_text: Option<bool>, svg_include_id: Option<bool>, svg_include_node_id: Option<bool>, svg_simplify_stroke: Option<bool>, contents_only: Option<bool>, use_absolute_bounds: Option<bool>) -> Result<models::GetImages, Error<GetImagesError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_file_key = file_key;
     let p_ids = ids;
@@ -386,8 +386,8 @@ pub async fn get_images(configuration: &configuration::Configuration, file_key: 
         let content = resp.text().await?;
         match content_type {
             ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::InlineObject2`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::InlineObject2`")))),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::GetImages`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::GetImages`")))),
         }
     } else {
         let content = resp.text().await?;

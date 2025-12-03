@@ -19,11 +19,11 @@ use super::{Error, configuration, ContentType};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetFileStylesError {
-    Status400(models::InlineObject16),
-    Status403(models::InlineObject19),
-    Status404(models::InlineObject22),
-    Status429(models::InlineObject23),
-    Status500(models::InlineObject25),
+    Status400(models::BadRequestErrorResponseWithErrMessage),
+    Status403(models::ForbiddenErrorResponseWithErrMessage),
+    Status404(models::NotFoundErrorResponseWithErrorBoolean),
+    Status429(models::TooManyRequestsErrorResponseWithErrMessage),
+    Status500(models::InternalServerErrorResponseWithErrMessage),
     UnknownValue(serde_json::Value),
 }
 
@@ -31,17 +31,17 @@ pub enum GetFileStylesError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetStyleError {
-    Status400(models::InlineObject16),
-    Status403(models::InlineObject19),
-    Status404(models::InlineObject22),
-    Status429(models::InlineObject23),
-    Status500(models::InlineObject25),
+    Status400(models::BadRequestErrorResponseWithErrMessage),
+    Status403(models::ForbiddenErrorResponseWithErrMessage),
+    Status404(models::NotFoundErrorResponseWithErrorBoolean),
+    Status429(models::TooManyRequestsErrorResponseWithErrMessage),
+    Status500(models::InternalServerErrorResponseWithErrMessage),
     UnknownValue(serde_json::Value),
 }
 
 
 /// Get a list of published styles within a file library.
-pub async fn get_file_styles(configuration: &configuration::Configuration, file_key: &str) -> Result<models::InlineObject11, Error<GetFileStylesError>> {
+pub async fn get_file_styles(configuration: &configuration::Configuration, file_key: &str) -> Result<models::GetFileStyles, Error<GetFileStylesError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_file_key = file_key;
 
@@ -78,8 +78,8 @@ pub async fn get_file_styles(configuration: &configuration::Configuration, file_
         let content = resp.text().await?;
         match content_type {
             ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::InlineObject11`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::InlineObject11`")))),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::GetFileStyles`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::GetFileStyles`")))),
         }
     } else {
         let content = resp.text().await?;
@@ -89,7 +89,7 @@ pub async fn get_file_styles(configuration: &configuration::Configuration, file_
 }
 
 /// Get metadata on a style by key.
-pub async fn get_style(configuration: &configuration::Configuration, key: &str) -> Result<models::InlineObject12, Error<GetStyleError>> {
+pub async fn get_style(configuration: &configuration::Configuration, key: &str) -> Result<models::GetStyle, Error<GetStyleError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_key = key;
 
@@ -126,8 +126,8 @@ pub async fn get_style(configuration: &configuration::Configuration, key: &str) 
         let content = resp.text().await?;
         match content_type {
             ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::InlineObject12`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::InlineObject12`")))),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::GetStyle`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::GetStyle`")))),
         }
     } else {
         let content = resp.text().await?;

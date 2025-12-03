@@ -19,11 +19,11 @@ use super::{Error, configuration, ContentType};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetComponentSetError {
-    Status400(models::InlineObject16),
-    Status403(models::InlineObject19),
-    Status404(models::InlineObject22),
-    Status429(models::InlineObject23),
-    Status500(models::InlineObject25),
+    Status400(models::BadRequestErrorResponseWithErrMessage),
+    Status403(models::ForbiddenErrorResponseWithErrMessage),
+    Status404(models::NotFoundErrorResponseWithErrorBoolean),
+    Status429(models::TooManyRequestsErrorResponseWithErrMessage),
+    Status500(models::InternalServerErrorResponseWithErrMessage),
     UnknownValue(serde_json::Value),
 }
 
@@ -31,17 +31,17 @@ pub enum GetComponentSetError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetFileComponentSetsError {
-    Status400(models::InlineObject16),
-    Status403(models::InlineObject19),
-    Status404(models::InlineObject22),
-    Status429(models::InlineObject23),
-    Status500(models::InlineObject25),
+    Status400(models::BadRequestErrorResponseWithErrMessage),
+    Status403(models::ForbiddenErrorResponseWithErrMessage),
+    Status404(models::NotFoundErrorResponseWithErrorBoolean),
+    Status429(models::TooManyRequestsErrorResponseWithErrMessage),
+    Status500(models::InternalServerErrorResponseWithErrMessage),
     UnknownValue(serde_json::Value),
 }
 
 
 /// Get metadata on a published component set by key.
-pub async fn get_component_set(configuration: &configuration::Configuration, key: &str) -> Result<models::InlineObject9, Error<GetComponentSetError>> {
+pub async fn get_component_set(configuration: &configuration::Configuration, key: &str) -> Result<models::GetComponentSet, Error<GetComponentSetError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_key = key;
 
@@ -78,8 +78,8 @@ pub async fn get_component_set(configuration: &configuration::Configuration, key
         let content = resp.text().await?;
         match content_type {
             ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::InlineObject9`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::InlineObject9`")))),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::GetComponentSet`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::GetComponentSet`")))),
         }
     } else {
         let content = resp.text().await?;
@@ -89,7 +89,7 @@ pub async fn get_component_set(configuration: &configuration::Configuration, key
 }
 
 /// Get a list of published component sets within a file library.
-pub async fn get_file_component_sets(configuration: &configuration::Configuration, file_key: &str) -> Result<models::InlineObject8, Error<GetFileComponentSetsError>> {
+pub async fn get_file_component_sets(configuration: &configuration::Configuration, file_key: &str) -> Result<models::GetFileComponentSets, Error<GetFileComponentSetsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_file_key = file_key;
 
@@ -126,8 +126,8 @@ pub async fn get_file_component_sets(configuration: &configuration::Configuratio
         let content = resp.text().await?;
         match content_type {
             ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::InlineObject8`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::InlineObject8`")))),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::GetFileComponentSets`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::GetFileComponentSets`")))),
         }
     } else {
         let content = resp.text().await?;

@@ -11,7 +11,7 @@ Method | HTTP request | Description
 
 ## get_file_styles
 
-> models::InlineObject11 get_file_styles(file_key)
+> models::GetFileStyles get_file_styles(file_key)
 Get file styles
 
 Get a list of published styles within a file library.
@@ -25,7 +25,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**models::InlineObject11**](inline_object_11.md)
+[**models::GetFileStyles**](GetFileStyles.md)
 
 ### Authorization
 
@@ -41,7 +41,7 @@ Name | Type | Description  | Required | Notes
 
 ## get_style
 
-> models::InlineObject12 get_style(key)
+> models::GetStyle get_style(key)
 Get style
 
 Get metadata on a style by key.
@@ -55,7 +55,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**models::InlineObject12**](inline_object_12.md)
+[**models::GetStyle**](GetStyle.md)
 
 ### Authorization
 
