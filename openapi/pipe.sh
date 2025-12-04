@@ -59,5 +59,5 @@ echo "     -i openapi/piped/scope=file/openapi.file.outline.rust.yaml \\"
 echo "     -c openapi/config.json \\"
 echo "     -g rust \\"
 echo "     -t ./templates \\"
-echo "     -o figma_rest_api_file"
+echo "     -o ./rust/figma-api"
 

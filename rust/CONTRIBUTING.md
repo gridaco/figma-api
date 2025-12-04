@@ -63,7 +63,7 @@ openapi-generator-cli generate \
   -c openapi/config.json \
   -g rust \
   -t ./templates \
-  -o figma_rest_api_file
+  -o ./rust/figma-api
 ```
 
 **Note:** Always use `piped/scope=file/openapi.file.outline.rust.yaml` (the processed version), not `openapi.file.yaml`.

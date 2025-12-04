@@ -16,6 +16,7 @@ python3 rust_rm_type.py
 ```
 
 **What the script does:**
+
 1. Loads `openapi.file.yaml`
 2. Applies overrides from `openapi.rust.overrides.yaml` (fixes for specific schemas)
 3. Removes discriminator fields (like `type`) from schemas used as enum variants
@@ -44,9 +45,10 @@ openapi-generator-cli generate \
 
 ### Step 3: Manual Adjustments
 
-After generation, the following manual adjustments are made to `figma_rest_api_file`:
+After generation, the following manual adjustments are made to `figma-api`:
 
 1. **Cargo.toml updates:**
+
    - Version bumped from `0.31.0` to `0.31.3`
    - Authors updated to include `universe@grida.co`
    - License changed from `Unlicense` to `MIT`
@@ -55,11 +57,12 @@ After generation, the following manual adjustments are made to `figma_rest_api_f
    - Added dev-dependencies (`serde_path_to_error`, `tokio`)
 
 2. **Test files:**
+
    - Added `tests/serialization_test.rs` - tests deserialization of example JSON files
    - Added `tests/files_api_integration.rs` - integration tests for API calls
 
 3. **Stale file cleanup:**
-   - `has_geometry_trait_all_of_fill_override_table.rs` exists in `figma_rest_api_file` but is not generated anymore (removed by the Python script). It's not referenced anywhere and can be safely deleted.
+   - `has_geometry_trait_all_of_fill_override_table.rs` exists in `figma-api` but is not generated anymore (removed by the Python script). It's not referenced anywhere and can be safely deleted.
 
 ## Why Pre-processing is Necessary
 
@@ -70,6 +73,7 @@ The Figma API spec uses discriminators extensively (e.g., `Node` enum with varia
 - Solution: Remove `type` from all variant schemas, keeping it only at the enum level
 
 Additionally, some fields in the spec are:
+
 - Structurally inconsistent (nullable vs non-nullable)
 - Too complex for clean Rust type generation
 - Not currently needed in our usage
@@ -78,7 +82,7 @@ These are removed via the `HARD_REMOVED_PROPS` list in the Python script.
 
 ## Current State
 
-- **Generated code matches existing code:** The model and API files are identical between `generated-client` and `figma_rest_api_file` (except for the stale `has_geometry_trait_all_of_fill_override_table.rs`)
+- **Generated code matches existing code:** The model and API files are identical between `generated-client` and `figma-api` (except for the stale `has_geometry_trait_all_of_fill_override_table.rs`)
 - **Only differences are:**
   1. `Cargo.toml` - manual metadata updates
   2. Test files - manually added
@@ -90,9 +94,9 @@ These are removed via the `HARD_REMOVED_PROPS` list in the Python script.
 2. Update `openapi/openapi.rust.overrides.yaml` if schema fixes are needed
 3. Run the pre-processing script: `cd openapi && python3 rust_rm_type.py`
 4. Generate fresh code: `openapi-generator-cli generate -i openapi/openapi.file.rust.yaml -c openapi/config.json -g rust -t ./templates -o generated-client`
-5. Copy generated code to `figma_rest_api_file/src/` (excluding tests)
-6. Update `figma_rest_api_file/Cargo.toml` with manual metadata
-7. Keep test files in `figma_rest_api_file/tests/`
+5. Copy generated code to `figma-api/src/` (excluding tests)
+6. Update `figma-api/Cargo.toml` with manual metadata
+7. Keep test files in `figma-api/tests/`
 8. Remove any stale files that are no longer generated
 
 ## Files to Update in CONTRIBUTING.md
@@ -113,4 +117,3 @@ openapi-generator-cli generate \
   -t ./templates \
   -o generated-client
 ```
-
