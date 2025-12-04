@@ -206,3 +206,6 @@ node-compile-cache/
 
 # Test artifacts
 **/__tests__/artifacts/
+
+# local purposed files
+.local

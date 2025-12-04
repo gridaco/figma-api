@@ -12,7 +12,7 @@ fn read_json_file<P: AsRef<Path>>(path: P) -> String {
 #[test]
 fn test_deserialize_file_response_primitive() {
     // Read JSON from file
-    let json = read_json_file("../examples/__primitive__.json");
+    let json = read_json_file("../fixtures/api-responses/__primitive__.json");
 
     // Try to deserialize the JSON into our model (file response)
     let result = serde_json::from_str::<GetFile>(&json);
@@ -26,7 +26,7 @@ fn test_deserialize_file_response_primitive() {
 #[test]
 fn test_deserialize_node() {
     // Read JSON from file
-    let json = read_json_file("../examples/__rectangle__.json");
+    let json = read_json_file("../fixtures/api-responses/__rectangle__.json");
 
     // Try to deserialize the JSON into a Node
     let result = serde_json::from_str::<Node>(&json);
@@ -41,7 +41,7 @@ fn test_deserialize_node() {
 #[test]
 fn test_deserialize_file_response_full() {
     // Read JSON from file
-    let json = read_json_file("../examples/__test__.json");
+    let json = read_json_file("../fixtures/api-responses/__test__.json");
 
     // First attempt full deserialization
     let jd = &mut serde_json::Deserializer::from_str(&json);
